@@ -27,6 +27,18 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
 
+    'mod/room:addinstance' => [
+        'riskbitmask' => RISK_XSS,
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ],
+
     'mod/room:view' => [
         'captype' => 'view',
         'contextlevel' => CONTEXT_COURSE,
