@@ -66,10 +66,6 @@ class mod_room_mod_form extends moodleform_mod {
             $this->add_intro_editor();
         }
 
-        // Adding the rest of mod_room settings, spreading all them into this fieldset
-        // ... or adding more fieldsets ('header' elements) if needed for better logic.
-        $mform->addElement('static', 'label1', 'roomsettings', get_string('roomsettings', 'mod_room'));
-        $mform->addElement('header', 'roomfieldset', get_string('roomfieldset', 'mod_room'));
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
