@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param string $feature Constant representing the feature.
  * @return true | null True if the feature is supported, null otherwise.
  */
-function mod_room_supports($feature) {
+function room_supports($feature) {
     switch ($feature) {
         case FEATURE_MOD_INTRO:
             return true;
@@ -50,7 +50,7 @@ function mod_room_supports($feature) {
  * @param mod_room_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function mod_room_add_instance($moduleinstance, $mform = null) {
+function room_add_instance($moduleinstance, $mform = null) {
     global $DB;
 
     $moduleinstance->timecreated = time();
@@ -70,7 +70,7 @@ function mod_room_add_instance($moduleinstance, $mform = null) {
  * @param mod_room_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function mod_room_update_instance($moduleinstance, $mform = null) {
+function room_update_instance($moduleinstance, $mform = null) {
     global $DB;
 
     $moduleinstance->timemodified = time();
@@ -85,7 +85,7 @@ function mod_room_update_instance($moduleinstance, $mform = null) {
  * @param int $id Id of the module instance.
  * @return bool True if successful, false on failure.
  */
-function mod_room_delete_instance($id) {
+function room_delete_instance($id) {
     global $DB;
 
     $exists = $DB->get_record('mod_room', array('id' => $id));
@@ -108,7 +108,7 @@ function mod_room_delete_instance($id) {
  * @param stdClass $module.
  * @param cm_info $cm.
  */
-function mod_room_extend_navigation($roomnode, $course, $module, $cm) {
+function room_extend_navigation($roomnode, $course, $module, $cm) {
 }
 
 /**
@@ -120,5 +120,5 @@ function mod_room_extend_navigation($roomnode, $course, $module, $cm) {
  * @param settings_navigation $settingsnav {@link settings_navigation}
  * @param navigation_node $roomnode {@link navigation_node}
  */
-function mod_room_extend_settings_navigation($settingsnav, $roomnode = null) {
+function room_extend_settings_navigation($settingsnav, $roomnode = null) {
 }
