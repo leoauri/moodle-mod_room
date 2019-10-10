@@ -9,7 +9,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course where the instance appears."/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Display name for instance in course."/>
-        <FIELD NAME="type" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="Master plans displaying all slots have type 1."/>
+        <FIELD NAME="type" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="Master plans displaying all slots have type 0."/>
         <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>

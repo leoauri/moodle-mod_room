@@ -55,6 +55,11 @@ function room_add_instance($moduleinstance, $mform = null) {
 
     $moduleinstance->timecreated = time();
 
+    // Hard code room plans as master plans for now
+    if (empty($moduleinstance->type)) {
+        $moduleinstance->type = 0;
+    }
+
     $id = $DB->insert_record('room', $moduleinstance);
 
     return $id;
