@@ -52,7 +52,7 @@ $event = \mod_room\event\course_module_viewed::create(array(
     'context' => $modulecontext
 ));
 $event->add_record_snapshot('course', $course);
-$event->add_record_snapshot('mod_room', $moduleinstance);
+$event->add_record_snapshot('room', $moduleinstance);
 $event->trigger();
 
 $PAGE->set_url('/mod/room/view.php', array('id' => $cm->id));
