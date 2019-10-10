@@ -55,7 +55,7 @@ function room_add_instance($moduleinstance, $mform = null) {
 
     $moduleinstance->timecreated = time();
 
-    $id = $DB->insert_record('mod_room', $moduleinstance);
+    $id = $DB->insert_record('room', $moduleinstance);
 
     return $id;
 }
@@ -76,7 +76,7 @@ function room_update_instance($moduleinstance, $mform = null) {
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
 
-    return $DB->update_record('mod_room', $moduleinstance);
+    return $DB->update_record('room', $moduleinstance);
 }
 
 /**
@@ -88,12 +88,12 @@ function room_update_instance($moduleinstance, $mform = null) {
 function room_delete_instance($id) {
     global $DB;
 
-    $exists = $DB->get_record('mod_room', array('id' => $id));
+    $exists = $DB->get_record('room', array('id' => $id));
     if (!$exists) {
         return false;
     }
 
-    $DB->delete_records('mod_room', array('id' => $id));
+    $DB->delete_records('room', array('id' => $id));
 
     return true;
 }
