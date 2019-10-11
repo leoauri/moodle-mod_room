@@ -125,5 +125,14 @@ function room_extend_navigation($roomnode, $course, $module, $cm) {
  * @param settings_navigation $settingsnav {@link settings_navigation}
  * @param navigation_node $roomnode {@link navigation_node}
  */
-function room_extend_settings_navigation($settingsnav, $roomnode = null) {
+function room_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $roomnode) {
+    global $PAGE;
+
+    $cm = $PAGE->cm;
+    $context = $cm->context;
+
+    if (has_capability('mod/room:editrooms', $context)) {
+        $roomnode->add(get_string('newroom', 'mod_room'), 
+            new moodle_url('roomedit.php', array('id' => $cm->id)));
+    }
 }

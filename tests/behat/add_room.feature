@@ -21,7 +21,7 @@ Feature: Add rooms to be managed
     
   Scenario: Add a room to the Room Management plugin
     Given I follow "Room Plan"
-    And I navigate to "New Room" in current page administration
+    And I navigate to "New room" in current page administration
     And I set the following fields to these values:
       | Room Name | The Room |
     And I press "Save"
