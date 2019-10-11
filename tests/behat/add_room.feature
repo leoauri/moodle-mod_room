@@ -17,7 +17,7 @@ Feature: Add rooms to be managed
     And I log in as "admin"
     And I am on "Course 1" course homepage with editing mode on
     And I add a "Room Plan" to section "1" and I fill the form with:
-      | Name | Room Plan |
+      | Display name | Room Plan |
     
   Scenario: Add a room to the Room Management plugin
     Given I follow "Room Plan"
