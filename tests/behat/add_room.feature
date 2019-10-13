@@ -23,6 +23,6 @@ Feature: Add rooms to be managed
     Given I follow "Room Plan"
     And I navigate to "New room" in current page administration
     And I set the following fields to these values:
-      | Room Name | The Room |
+      | Room name | The Room |
     And I press "Save"
     Then I should see "The Room"

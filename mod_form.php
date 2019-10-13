@@ -47,7 +47,7 @@ class mod_room_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         // Adding the standard "name" field.
-        $mform->addElement('text', 'name', get_string('roomname', 'mod_room'), array('size' => '64'));
+        $mform->addElement('text', 'name', get_string('displayname', 'mod_room'), array('size' => '64'));
 
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -57,7 +57,7 @@ class mod_room_mod_form extends moodleform_mod {
 
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        $mform->addHelpButton('name', 'roomname', 'mod_room');
+        $mform->addHelpButton('name', 'displayname', 'mod_room');
 
         // Adding the standard "intro" and "introformat" fields.
         if ($CFG->branch >= 29) {
