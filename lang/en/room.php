@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['newroom'] = 'New room';
+$string['addroom'] = 'Add room';
 $string['addslot'] = 'Add slot';
 $string['bookable'] = 'Bookable';
 $string['duration'] = 'Duration';

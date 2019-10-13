@@ -43,5 +43,9 @@ class room_edit extends \moodleform {
         $mform->setType('roomname', PARAM_TEXT);
         $mform->addRule('roomname', null, 'required', null, 'client');
 
+        $this->add_action_buttons(true, get_string('addroom', 'mod_room'));
+
+        // set the defaults
+        // $this->set_data($chapter);
     }
 }
