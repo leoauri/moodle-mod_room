@@ -43,29 +43,35 @@ if ($id) {
     print_error(get_string('missingidandcmid', 'mod_room'));
 }
 
-require_login($course, true, $cm);
+require_login($course, false, $cm);
 
+// TODO: check if we are outside of course context, set up accordingly
 $modulecontext = context_module::instance($cm->id);
-
-// $event = \mod_room\event\course_module_viewed::create(array(
-//     'objectid' => $moduleinstance->id,
-//     'context' => $modulecontext
-// ));
-// $event->add_record_snapshot('course', $course);
-// $event->add_record_snapshot('room', $moduleinstance);
-// $event->trigger();
-
-$mform = new \mod_room\form\room_edit();
-
-if ($mform->is_cancelled()) {
-    redirect(new moodle_url('/mod/room/view.php', array('id' => $id)));
-} 
-
 
 $PAGE->set_url('/mod/room/roomedit.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
+
+$mform = new \mod_room\form\room_edit(new moodle_url('/mod/room/roomedit.php', array('id' => $id)));
+
+if ($mform->is_cancelled()) {
+    redirect(new moodle_url('/mod/room/view.php', array('id' => $id)));
+} else if ($data = $mform->get_data()) {
+    if (confirm_sesskey() && has_capability('mod/room:editrooms', context_system::instance())) {
+        $newroom = new stdClass();
+        $newroom->name = $data->roomname;
+        // $newroom->usermodified = 
+        $data->timecreated = time();
+        $data->timemodified = time();
+
+        $DB->insert_record('room_space', $newroom);
+        // TODO: trigger add room event
+        redirect(new moodle_url('/mod/room/view.php', array('id' => $cm->id)), 
+                get_string('changessaved'), 0);
+    }
+}
+
 
 echo $OUTPUT->header();
 
