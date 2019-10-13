@@ -62,4 +62,9 @@ $PAGE->set_context($modulecontext);
 
 echo $OUTPUT->header();
 
+$rooms = $DB->get_records('room_space');
+foreach ($rooms as $room) {
+    echo $room->name . "\n";
+}
+
 echo $OUTPUT->footer();
