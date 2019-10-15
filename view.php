@@ -25,6 +25,8 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 
+use mod_room\output\room_plan;
+
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
 
@@ -62,9 +64,8 @@ $PAGE->set_context($modulecontext);
 
 echo $OUTPUT->header();
 
-$rooms = $DB->get_records('room_space');
-foreach ($rooms as $room) {
-    echo $room->name . "\n";
-}
+$roomplan = new room_plan($modulecontext);
+echo $roomplan->render();
+
 
 echo $OUTPUT->footer();
