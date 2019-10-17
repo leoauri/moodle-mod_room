@@ -64,6 +64,8 @@ $PAGE->set_context($modulecontext);
 
 echo $OUTPUT->header();
 
+echo $OUTPUT->heading(format_string($moduleinstance->name));
+
 $roomplan = new room_plan($modulecontext);
 echo $roomplan->render();
 

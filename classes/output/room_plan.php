@@ -40,13 +40,43 @@ class room_plan {
         $this->modulecontext = $modulecontext;
     }
 
-    public function render() {
+    public function render(int $hourstart = 9, int $hourend = 23) {
         global $DB;
-        $rooms = $DB->get_records('room_space');
-        $return = '';
-        foreach ($rooms as $room) {
-            $return .= $room->name . "\n";
+
+        $outputtable = new \html_table();
+        $outputtable->id = 'room-plan';
+
+
+        // First cell of each row is the hour value
+        for ($hour = $hourstart; $hour < $hourend; $hour++) {
+            $outputtable->data[] = array($hour);
         }
-        return $return;
+
+        // The header row has a blank where the times come,
+        // then the room names, each spanning two columns
+        $outputtable->head = array('');
+        $outputtable->headspan = array(1);
+        $rooms = $DB->get_records('room_space');
+        foreach ($rooms as $room) {
+            $outputtable->head[] = $room->name;
+            $outputtable->headspan[] = 2;
+
+            $firstrow = true;
+            foreach ($outputtable->data as &$row) {
+                if ($firstrow) {
+                    $firstrow = false;
+                    // The first row contains the container for the slots which spans all rows
+                    $slotscontainer = new \html_table_cell();
+                    $slotscontainer->rowspan = $hourend - $hourstart;
+                    $row[] = $slotscontainer;
+                }
+
+                $row[] = new \html_table_cell('+');
+            }
+            unset($row);
+        }
+
+
+        return \html_writer::table($outputtable);
     }
 }
