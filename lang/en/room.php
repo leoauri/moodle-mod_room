@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin strings are defined here.
+ * Room management module language strings.
  *
  * @package     mod_room
  * @category    string
@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['room:addinstance'] = 'Add room plan instance to course';
 $string['newroom'] = 'New room';
 $string['addroom'] = 'Add room';
 $string['addslot'] = 'Add slot';
