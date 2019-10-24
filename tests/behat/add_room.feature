@@ -22,7 +22,6 @@ Feature: Add rooms to be managed
   Scenario: Add a room to the Room Management plugin
     Given I follow "Room Plan"
     And I navigate to "New room" in current page administration
-    # Then "#region-main-settings-menu" "css_element" should not exist
     And I set the following fields to these values:
       | Room name | The Room |
     And I press "Add room"
