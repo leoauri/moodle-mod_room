@@ -26,6 +26,9 @@ namespace mod_room\output;
 
 defined('MOODLE_INTERNAL') || die();
 
+use moodle_url;
+use html_writer;
+
 /**
  * Room plan renderable.
  *
@@ -34,6 +37,9 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class room_plan {
+    /**
+     * @var \context_module
+     */
     public $modulecontext;
 
     public function __construct($modulecontext) {
@@ -42,6 +48,17 @@ class room_plan {
 
     public function render(int $hourstart = 9, int $hourend = 23) {
         global $DB;
+
+        $output = '';
+
+        if (has_capability('mod/room:editslots', $this->modulecontext)) {
+            $url = new moodle_url(
+                '/mod/room/slotedit.php', 
+                array('id' => $this->modulecontext->get_course_context()->instanceid));
+            $label = get_string('addslot', 'mod_room');
+            $output .= html_writer::div(html_writer::link(
+                $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-slot-add');
+        }
 
         $outputtable = new \html_table();
         $outputtable->id = 'room-plan';
@@ -76,7 +93,7 @@ class room_plan {
             unset($row);
         }
 
-
-        return \html_writer::table($outputtable);
+        $output .= html_writer::table($outputtable);
+        return $output;
     }
 }

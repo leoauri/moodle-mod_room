@@ -1,4 +1,4 @@
-@mod @mod_room @street_college
+@mod @mod_room @mod_room_add_slot @street_college
 Feature: Add slots
   In order to organise use of physical spaces
   As a teacher
@@ -14,7 +14,7 @@ Feature: Add slots
       | Course 1 | C1        | topics |
     And the following "course enrolments" exist:
       | user     | course | role    |
-      | teacher1 | C1     | teacher |
+      | teacher1 | C1     | editingteacher |
       | student1 | C1     | student |
     And I log in as "admin"
     And I am on "Course 1" course homepage with editing mode on
@@ -27,11 +27,24 @@ Feature: Add slots
     And I press "Add room"
     And I log out
 
+  Scenario: Admin can add a slot to the room plan
+    Given I log in as "admin"
+    And I am on "Course 1" course homepage
+    And I follow "Room Plan"
+    And I follow "Add slot"
+    And I set the following fields to these values:
+      | Slot name | Nice event |
+      | Room | The Room |
+    And I press "Add slot"
+    When I am viewing site calendar
+    Then I should see "Nice event"
+    And I should see "The Room"
+
   Scenario: A teacher can add a slot to the room plan
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I follow "Room Plan"
-    And I press "Add slot"
+    And I follow "Add slot"
     And I set the following fields to these values:
       | Slot name | Nice event |
       | Room | The Room |
@@ -50,7 +63,7 @@ Feature: Add slots
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I follow "Room Plan"
-    And I press "Add slot"
+    And I follow "Add slot"
     And I set the following fields to these values:
       | Slot name | Nice event |
       | Room | The Room |
