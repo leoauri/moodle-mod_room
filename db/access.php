@@ -40,17 +40,23 @@ $capabilities = [
     ],
 
     'mod/room:view' => [
-        'captype' => 'view',
-        'contextlevel' => CONTEXT_COURSE,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
-        ],
-        'clonepermissionsfrom' => 'moodle/course:view',
+            'manager'        => CAP_ALLOW,
+            'coursecreator'  => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher'        => CAP_ALLOW,
+            'student'        => CAP_ALLOW,
+            ],
     ],
 
     'mod/room:editslots' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
         ],
         'clonepermissionsfrom' => 'moodle/course:manageactivities',
     ],
@@ -59,6 +65,7 @@ $capabilities = [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'manager' => CAP_ALLOW
         ],
         'clonepermissionsfrom' => 'moodle/site:configview',
     ],
@@ -67,6 +74,7 @@ $capabilities = [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'manager' => CAP_ALLOW
         ],
         'clonepermissionsfrom' => 'moodle/site:configview',
     ],
