@@ -54,7 +54,7 @@ class room_plan {
         if (has_capability('mod/room:editslots', $this->modulecontext)) {
             $url = new moodle_url(
                 '/mod/room/slotedit.php', 
-                array('id' => $this->modulecontext->get_course_context()->instanceid));
+                array('id' => $this->modulecontext->instanceid));
             $label = get_string('addslot', 'mod_room');
             $output .= html_writer::div(html_writer::link(
                 $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-slot-add');
