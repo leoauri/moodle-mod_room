@@ -33,7 +33,7 @@ Feature: Add slots
     And I follow "Room Plan"
     And I follow "Add slot"
     And I set the following fields to these values:
-      | Slot name | Nice event |
+      | Slot title | Nice event |
       | Room | The Room |
     And I press "Add slot"
     When I am viewing site calendar
@@ -46,7 +46,7 @@ Feature: Add slots
     And I follow "Room Plan"
     And I follow "Add slot"
     And I set the following fields to these values:
-      | Slot name | Nice event |
+      | Slot title | Nice event |
       | Room | The Room |
     And I press "Add slot"
     When I am viewing site calendar
@@ -65,7 +65,7 @@ Feature: Add slots
     And I follow "Room Plan"
     And I follow "Add slot"
     And I set the following fields to these values:
-      | Slot name | Nice event |
+      | Slot title | Nice event |
       | Room | The Room |
     And I press "Add slot"
     And I log out
