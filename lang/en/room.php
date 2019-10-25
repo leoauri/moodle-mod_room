@@ -81,3 +81,4 @@ $string['slottitle'] = 'Slot title';
 $string['starttime'] = 'Start time';
 $string['user'] = 'User';
 $string['view'] = 'View';
+$string['mustselectaroom'] = 'You must select a room.';

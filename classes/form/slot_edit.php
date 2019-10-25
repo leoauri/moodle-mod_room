@@ -37,15 +37,22 @@ require_once($CFG->libdir.'/formslib.php');
  */
 class slot_edit extends \moodleform {
     function definition() {
+        global $DB;
+
         $mform = $this->_form;
 
         $mform->addElement('text', 'slottitle', get_string('slottitle', 'mod_room'));
         $mform->setType('slottitle', PARAM_TEXT);
         $mform->addRule('slottitle', null, 'required', null, 'client');
 
-        $this->add_action_buttons(true, get_string('addslot', 'mod_room'));
+        $roomchoices = array('noselection' => '');
+        $rooms = $DB->get_records('room_space');
+        foreach ($rooms as $room) {
+            $roomchoices[$room->id] = $room->name; 
+        }
+        $mform->addElement('select', 'room', get_string('room', 'mod_room'), $roomchoices);
+        $mform->addRule('room', get_string('mustselectaroom', 'mod_room'), 'numeric', null, 'client');
 
-        // set the defaults
-        // $this->set_data($chapter);
+        $this->add_action_buttons(true, get_string('addslot', 'mod_room'));
     }
 }
