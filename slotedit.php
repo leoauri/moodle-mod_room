@@ -24,6 +24,8 @@
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
+require_once($CFG->dirroot.'/calendar/lib.php');
+
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
@@ -58,14 +60,21 @@ $mform = new \mod_room\form\slot_edit(new moodle_url('/mod/room/slotedit.php', a
 if ($mform->is_cancelled()) {
     redirect(new moodle_url('/mod/room/view.php', array('id' => $id)));
 } else if ($data = $mform->get_data()) {
-    if (confirm_sesskey() && has_capability('mod/room:editslots', context_system::instance())) {
+    // TODO: correct context to course context
+    if (confirm_sesskey() && has_capability('mod/room:editslots', context_course::instance($course->id))) {
         $newslot = new stdClass();
-        $newslot->title = $data->slottitle;
-        // $newroom->usermodified = 
-        $data->timecreated = time();
-        $data->timemodified = time();
+        $newslot->modulename = 'room';
+        $newslot->courseid = $moduleinstance->course;
+        $newslot->groupid = 0;
+        $newslot->userid = 0;
+        $newslot->instance = $moduleinstance->id;
 
-        // $DB->insert_record('room_slot', $newslot);
+        $newslot->type = CALENDAR_EVENT_TYPE_STANDARD;
+        $newslot->timestart = $data->starttime;
+        $newslot->name = $data->slottitle;
+
+        calendar_event::create($newslot, false);
+
         // TODO: trigger add slot event
         redirect(new moodle_url('/mod/room/view.php', array('id' => $cm->id)), 
                 get_string('changessaved'), 0);

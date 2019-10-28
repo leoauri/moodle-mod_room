@@ -16,6 +16,7 @@ Feature: Add slots
       | user     | course | role    |
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student |
+      | admin    | C1     | manager |
     And I log in as "admin"
     And I am on "Course 1" course homepage with editing mode on
     And I add a "Room Plan" to section "1" and I fill the form with:

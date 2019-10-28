@@ -53,6 +53,12 @@ class slot_edit extends \moodleform {
         $mform->addElement('select', 'room', get_string('room', 'mod_room'), $roomchoices);
         $mform->addRule('room', get_string('mustselectaroom', 'mod_room'), 'numeric', null, 'client');
 
+        $mform->addElement('date_time_selector', 'starttime', get_string('starttime', 'mod_room'));
+
+        $mform->addElement('text', 'duration', get_string('durationminutes', 'calendar'));
+        $mform->setType('duration', PARAM_INT);
+        $mform->addRule('duration', null, 'numeric', null, 'client');
+
         $this->add_action_buttons(true, get_string('addslot', 'mod_room'));
     }
 }

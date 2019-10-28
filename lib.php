@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+define('ROOM_EVENT_TYPE_SLOT', 'slot');
+
 /**
  * Return if the plugin supports $feature.
  *
