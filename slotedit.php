@@ -60,7 +60,6 @@ $mform = new \mod_room\form\slot_edit(new moodle_url('/mod/room/slotedit.php', a
 if ($mform->is_cancelled()) {
     redirect(new moodle_url('/mod/room/view.php', array('id' => $id)));
 } else if ($data = $mform->get_data()) {
-    // TODO: correct context to course context
     if (confirm_sesskey() && has_capability('mod/room:editslots', context_course::instance($course->id))) {
         $newslot = new stdClass();
         $newslot->modulename = 'room';
@@ -71,7 +70,13 @@ if ($mform->is_cancelled()) {
 
         $newslot->type = CALENDAR_EVENT_TYPE_STANDARD;
         $newslot->timestart = $data->starttime;
+        $newslot->duration = $data->duration;
         $newslot->name = $data->slottitle;
+        
+        // This saves the string room name to the calendar event, because it's the only way to display 
+        // it in moodle calendar.  Kind of silly because we just did the db lookup to build the form...
+        global $DB;
+        $newslot->location = $DB->get_field('room_space', 'name', ['id' => $data->room]);
 
         calendar_event::create($newslot, false);
 

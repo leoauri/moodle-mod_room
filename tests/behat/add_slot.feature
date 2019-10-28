@@ -39,7 +39,8 @@ Feature: Add slots
     And I press "Add slot"
     When I am viewing site calendar
     Then I should see "Nice event"
-    And I should see "The Room"
+    When I follow "Nice event"
+    Then I should see "The Room"
 
   Scenario: A teacher can add a slot to the room plan
     Given I log in as "teacher1"
@@ -52,7 +53,8 @@ Feature: Add slots
     And I press "Add slot"
     When I am viewing site calendar
     Then I should see "Nice event"
-    And I should see "The Room"
+    When I follow "Nice event"
+    Then I should see "The Room"
 
   Scenario: A student does not have a link for adding new slots
     Given I log in as "student1"
@@ -73,4 +75,5 @@ Feature: Add slots
     And I log in as "student1"
     When I am viewing site calendar
     Then I should see "Nice event"
-    And I should see "The Room"
+    When I follow "Nice event"
+    Then I should see "The Room"
