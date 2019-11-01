@@ -57,7 +57,7 @@ function room_add_instance($moduleinstance, $mform = null) {
 
     $moduleinstance->timecreated = time();
 
-    // Hard code room plans as master plans for now
+    // Hard code room plans as non-master plans for now
     if (empty($moduleinstance->type)) {
         $moduleinstance->type = 0;
     }

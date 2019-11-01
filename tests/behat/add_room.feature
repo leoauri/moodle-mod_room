@@ -25,4 +25,5 @@ Feature: Add rooms to be managed
     And I set the following fields to these values:
       | Room name | The Room |
     And I press "Add room"
+    And I follow "Room administration"
     Then I should see "The Room"

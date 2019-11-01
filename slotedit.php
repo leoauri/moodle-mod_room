@@ -69,8 +69,9 @@ if ($mform->is_cancelled()) {
         $newslot->instance = $moduleinstance->id;
 
         $newslot->type = CALENDAR_EVENT_TYPE_STANDARD;
+        $newslot->eventtype = ROOM_EVENT_TYPE_SLOT;
         $newslot->timestart = $data->starttime;
-        $newslot->duration = $data->duration;
+        $newslot->timeduration = $data->duration * 60;
         $newslot->name = $data->slottitle;
         
         // This saves the string room name to the calendar event, because it's the only way to display 

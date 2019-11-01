@@ -26,12 +26,15 @@ require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 
 use mod_room\output\room_plan;
+use mod_room\form\date_selector;
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
 
 // ... module instance id.
 $r  = optional_param('r', 0, PARAM_INT);
+
+$date = optional_param('date', 0, PARAM_INT);
 
 if ($id) {
     $cm             = get_coursemodule_from_id('room', $id, 0, false, MUST_EXIST);
@@ -62,12 +65,35 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
+if ($date) {
+    $dateselector = new date_selector(new moodle_url('/mod/room/view.php', array('id' => $id)), ['date' => $date]);
+} else {
+    $dateselector = new date_selector(new moodle_url('/mod/room/view.php', array('id' => $id)));
+}
+
+if ($dateselected = $dateselector->get_data()) {
+    // $dateselected = $dateselected->displaydate;
+    redirect(new moodle_url('/mod/room/view.php', array('id' => $cm->id, 'date' => $dateselected->displaydate)));
+}
+
 echo $OUTPUT->header();
 
 echo $OUTPUT->heading(format_string($moduleinstance->name));
 
-$roomplan = new room_plan($modulecontext);
-echo $roomplan->render();
+$roomplan = new room_plan($modulecontext, $course->id, $date);
+
+// echo $roomplan->render();
+
+$dateselector->display();
+
+$renderer = $PAGE->get_renderer('mod_room');
+echo $renderer->render($roomplan);
+
+// echo $roomplan->list_slots();
+
+echo $roomplan->edit_slot_button();
+
+echo $roomplan->room_admin_button();
 
 
 echo $OUTPUT->footer();

@@ -1,0 +1,50 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_room/slot_info
+
+    This template renders an individual slot as info block.
+
+}}
+
+<div class="mod-room-slot-info m-t-1">
+    <div class="card rounded">
+        <div class="box card-header clearfix">
+            {{! <div class="commands float-sm-right">
+                <a href="http://dev.moodle.streetcollege.de:80/calendar/delete.php?id=13&amp;course=2" data-action="delete">
+                    <i class="icon fa fa-trash fa-fw " title="Delete" aria-label="Delete"></i>
+                </a>
+                <a href="http://dev.moodle.streetcollege.de:80/calendar/event.php?action=edit&amp;id=13&amp;course=2" data-action="edit">
+                    <i class="icon fa fa-cog fa-fw " title="Edit" aria-label="Edit"></i>
+                </a>
+            </div> }}
+            <div class="d-inline-block">
+                <h3 class="name d-inline-block">{{name}}</h3>
+            </div>
+        </div>
+        <div class="description card-body">
+            <div class="row">
+                <div class="col-xs-1"><i class="icon fa fa-clock-o fa-fw " title="When" aria-label="When"></i></div>
+                <div class="col-xs-11">{{userdatestart}}</div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-xs-1">{{#pix}} i/location, core, {{#str}} location {{/str}} {{/pix}}</div>
+                <div class="location-content col-xs-11">{{location}}</div>
+            </div>
+        </div>
+    </div>
+</div>
