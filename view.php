@@ -80,7 +80,7 @@ echo $OUTPUT->header();
 
 echo $OUTPUT->heading(format_string($moduleinstance->name));
 
-$roomplan = new room_plan($modulecontext, $course->id, $date);
+$roomplan = new room_plan($modulecontext, $moduleinstance, $date);
 
 // echo $roomplan->render();
 

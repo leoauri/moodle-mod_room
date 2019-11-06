@@ -48,9 +48,9 @@ class room_plan implements renderable, templatable {
     public $modulecontext;
 
     /**
-     * @var int course id
+     * @var \stdClass module instance
      */
-    protected $courseid;
+    protected $moduleinstance;
 
     /**
      * @var int date to render
@@ -62,9 +62,9 @@ class room_plan implements renderable, templatable {
      */
     protected $events;
 
-    public function __construct($modulecontext, $courseid, $date) {
+    public function __construct($modulecontext, $moduleinstance, $date) {
         $this->modulecontext = $modulecontext;
-        $this->courseid = $courseid;
+        $this->moduleinstance = $moduleinstance;
         $this->date = $date ? $date : usergetmidnight(time());
     }
 
@@ -103,13 +103,18 @@ class room_plan implements renderable, templatable {
         // FIX: also return in-progress events, i.e. that start before day and haven't ended  :|
         $sql = "SELECT e.* 
             FROM {event} e
-            WHERE timestart >= :timefrom AND timestart <= :timeto";
+            WHERE timestart >= :timefrom 
+                AND timestart <= :timeto
+                AND modulename = :modulename
+                AND instance = :instance";
 
         global $DB;
         $this->events = array_values(
             $DB->get_records_sql($sql, [
                 'timefrom' => $timestartfrom,
-                'timeto' => $timestartto
+                'timeto' => $timestartto,
+                'modulename' => 'room',
+                'instance' => $this->moduleinstance->id,
             ])
         );
 
@@ -125,62 +130,6 @@ class room_plan implements renderable, templatable {
             // }
         }
         unset($event);
-
-        // $sql = "SELECT e.*
-        //     FROM {event} e
-        //     INNER JOIN ($subquery) fe
-        //     ON e.modulename = fe.modulename
-        //     AND e.instance = fe.instance
-        //     AND e.eventtype = fe.eventtype
-        //     AND (e.priority = fe.priority OR (e.priority IS NULL AND fe.priority IS NULL))
-        //     LEFT JOIN {modules} m
-        //     ON e.modulename = m.name
-        //     WHERE (m.visible = 1 OR m.visible IS NULL) AND $whereclause
-        //     ORDER BY e.timestart");
-
-
-        // var_dump($this->events);
-
-
-
-        // $vault = \core_calendar\local\event\container::get_event_vault();
-
-        // // Guess what, this doesn't work!  Write your own DB query...
-        // $events = calendar_api::get_events(
-        // // $events = $vault->get_events(
-        //     $timestartfrom, 
-        //     $timestartto, 
-        //     null, null, null, null, null, 
-        //     $type, 
-        //     null, null, 
-        //     $coursesfilter, 
-        //     null, 
-        //     false
-        // );
-
-        // $type = \core_calendar\type_factory::get_calendar_instance();
-
-        // $related = [
-        //     'events' => $events,
-        //     'cache' => new \core_calendar\external\events_related_objects_cache($events),
-        //     'type' => $type,
-        // ];
-    
-        // // This seems to get the wrong course id!!
-        // // What about just passing it to the constructor first up?
-        // $courseid = $this->modulecontext->get_course_context()->id;
-        // $courseid = 2;
-
-        // $calendar = \calendar_information::create($timestartfrom, $courseid);        
-        // global $PAGE;
-        // $renderer = $PAGE->get_renderer('core_calendar');
-        // $upcoming = new \core_calendar\external\calendar_upcoming_exporter($calendar, $related);
-        // $data = $upcoming->export($renderer);
-
-        // // var_dump($data->events[0]->course);
-        // var_dump($data->events);
-
-
     }
 
     /**
