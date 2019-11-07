@@ -15,17 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * mod_room data generator
  *
- * @package     mod_room
- * @copyright   2019 Leo Auri <code@leoauri.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_room
+ * @category   test
+ * @copyright  2019 Leo Auri <code@leoauri.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_room';
-$plugin->release = '1.2.0-beta.1';
-$plugin->version  = 2019112800;
-$plugin->requires = 2019052000;
-$plugin->maturity = MATURITY_ALPHA;
+
+/**
+ * Room module data generator class
+ *
+ * @package    mod_room
+ * @category   test
+ * @copyright  2019 Leo Auri <code@leoauri.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class mod_room_generator extends testing_module_generator {
+    
+}

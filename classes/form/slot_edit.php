@@ -55,6 +55,9 @@ class slot_edit extends \moodleform {
 
         $mform->addElement('date_time_selector', 'starttime', get_string('starttime', 'mod_room'));
 
+        $mform->addElement('text', 'spots', get_string('spots', 'mod_room'), 'size="3"');
+        $mform->setType('spots', PARAM_INT);
+        $mform->addRule('spots', null, 'numeric', null, 'client');
 
         $durationgroup = array();
 
@@ -78,6 +81,7 @@ class slot_edit extends \moodleform {
             get_string('durationhoursminutes', 'mod_room'), 
             '<span class="hms-form-separator">:</span>'
         );
+        
         $mform->setType('duration[hours]', PARAM_INT);
         $mform->setType('duration[minutes]', PARAM_INT);
 

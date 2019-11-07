@@ -26,6 +26,8 @@ namespace mod_room\entity;
 
 defined('MOODLE_INTERNAL') || die();
 
+use \mod_room\entity\slot;
+
 /**
  * Room module slot collection.
  *
@@ -47,7 +49,7 @@ class slot_collection implements \IteratorAggregate, \Countable {
             }
         }
         // FIX: also return in-progress events, i.e. that start before day and haven't ended  :|
-        $sql = "SELECT e.* 
+        $sql = "SELECT e.id 
             FROM {event} e
             WHERE modulename = 'room'";
         $searchoptions = [];
@@ -70,52 +72,16 @@ class slot_collection implements \IteratorAggregate, \Countable {
         global $DB;
 
         // TODO: make this an array of slot objects
-        // $results = array_values($DB->get_records_sql($sql, $searchoptions));
-        // $this->slots = [];
-        // foreach ($results as $result) {
-        // }
-        
-        $this->slots = array_values($DB->get_records_sql($sql, $searchoptions));
+        $results = array_values($DB->get_records_sql($sql, $searchoptions));
+        $this->slots = [];
+        foreach ($results as $result) {
+            $this->slots[] = new slot($result->id);
+        }
     }
 
     public function prepare_display(\context_module $modulecontext) {
         foreach ($this->slots as &$slot) {
-            // Calculate human-readable date strings for start and end
-            $slot->userdatestart = userdate(
-                $slot->timestart, 
-                get_string('strftimedaydatetime', 'langconfig')
-            );
-
-            // Pass human-readable end data if event has duration
-            if ($slot->timeduration) {
-                // calculate end time, or, if other day, date
-                $endtime = $slot->timestart + $slot->timeduration;
-                $formatstring = (
-                    (usergetmidnight($slot->timestart) == usergetmidnight($endtime)) ? 
-                    'strftimetime' : 
-                    'strftimedaydatetime'
-                );
-                $slot->userdateend = userdate($endtime, get_string($formatstring, 'langconfig'));
-            }
-
-            // Pass edit and delete actions if user is capable
-            $slot->canedit = has_capability('mod/room:editslots', $modulecontext);
-            if ($slot->canedit) {
-                $slot->deleteurl = new \moodle_url(
-                    '/mod/room/slotdelete.php', 
-                    [
-                        'slotid' => $slot->id,
-                        'id' => $modulecontext->instanceid
-                    ]
-                );
-                $slot->editurl = new \moodle_url(
-                    '/mod/room/slotedit.php',
-                    [
-                        'slotid' => $slot->id,
-                        'id' => $modulecontext->instanceid
-                    ]
-                );
-            }
+            $slot->prepare_display($modulecontext);
         }
         unset($slot);
     }
@@ -148,8 +114,7 @@ class slot_collection implements \IteratorAggregate, \Countable {
 
     public function save_as_new() {
         foreach ($this->slots as $slot) {
-            // debugging('saving a slot as new');
-            $clone = new \mod_room\entity\slot();
+            $clone = new slot();
             $clone->clone_slot($slot);
             $clone->save();
         }

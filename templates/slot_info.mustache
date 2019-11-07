@@ -40,7 +40,7 @@
         </div>
         <div class="description card-body">
             <div class="row">
-                <div class="col-xs-1"><i class="icon fa fa-clock-o fa-fw " title="When" aria-label="When"></i></div>
+                <div class="col-xs-1">{{#pix}} i/calendareventtime, core, {{#str}} when, core_calendar {{/str}} {{/pix}}</div>
                 <div class="col-xs-11">
                     {{userdatestart}}{{#userdateend}} <strong>&raquo;</strong> {{userdateend}}{{/userdateend}}
                 </div>
@@ -49,6 +49,12 @@
                 <div class="col-xs-1">{{#pix}} i/location, core, {{#str}} location {{/str}} {{/pix}}</div>
                 <div class="location-content col-xs-11">{{location}}</div>
             </div>
+            {{#bookingsfree}}
+            <div class="row mt-1">
+                <div class="col-xs-1">{{#pix}} i/cookie, mod_room, {{#str}} freespots, mod_room {{/str}} {{/pix}}</div>
+                <div class="col-xs-11">{{#str}} freespots, mod_room {{/str}}: {{bookingsfree}}</div>
+            </div>
+            {{/bookingsfree}}
         </div>
     </div>
 </div>

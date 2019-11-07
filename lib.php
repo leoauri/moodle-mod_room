@@ -145,3 +145,14 @@ function room_extend_settings_navigation(settings_navigation $settingsnav, navig
         );
     }
 }
+
+/**
+ * Get icon mapping for font-awesome.
+ *
+ * @return  array
+ */
+function mod_room_get_fontawesome_icon_map() {
+    return [
+        'mod_room:i/cookie' => 'fa-cookie',
+    ];
+}
