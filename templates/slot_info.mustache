@@ -21,17 +21,16 @@
 
 }}
 
-<div class="mod-room-slot-info m-t-1">
+<div class="mod-room-slot-info m-t-1" data-event-title="{{name}}">
     <div class="card rounded">
         <div class="box card-header clearfix">
-            {{! <div class="commands float-sm-right">
-                <a href="http://dev.moodle.streetcollege.de:80/calendar/delete.php?id=13&amp;course=2" data-action="delete">
-                    <i class="icon fa fa-trash fa-fw " title="Delete" aria-label="Delete"></i>
-                </a>
-                <a href="http://dev.moodle.streetcollege.de:80/calendar/event.php?action=edit&amp;id=13&amp;course=2" data-action="edit">
-                    <i class="icon fa fa-cog fa-fw " title="Edit" aria-label="Edit"></i>
-                </a>
-            </div> }}
+            {{#canedit}}
+                <div class="commands float-sm-right">
+                    <a href="{{{deleteurl}}}" data-action="delete">
+                        {{#pix}}t/delete, core, {{#str}}delete{{/str}}{{/pix}}
+                    </a>
+                </div>
+            {{/canedit}}
             <div class="d-inline-block">
                 <h3 class="name d-inline-block">{{name}}</h3>
             </div>

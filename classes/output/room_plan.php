@@ -128,6 +128,16 @@ class room_plan implements renderable, templatable {
             // if ($event->duration) {
             //     // If 
             // }
+            $event->canedit = has_capability('mod/room:editslots', $this->modulecontext);
+            if ($event->canedit) {
+                $event->deleteurl = new moodle_url(
+                    '/mod/room/slotdelete.php', 
+                    [
+                        'slotid' => $event->id,
+                        'id' => $this->modulecontext->instanceid
+                    ]
+                );
+            }
         }
         unset($event);
     }
