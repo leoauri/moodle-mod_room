@@ -59,6 +59,8 @@ class slot_edit extends \moodleform {
         $mform->setType('duration', PARAM_INT);
         $mform->addRule('duration', null, 'numeric', null, 'client');
 
-        $this->add_action_buttons(true, get_string('addslot', 'mod_room'));
+        $confirmmessage = $this->_customdata['slotid'] ? 'updateslot' : 'addslot';
+
+        $this->add_action_buttons(true, get_string($confirmmessage, 'mod_room'));
     }
 }

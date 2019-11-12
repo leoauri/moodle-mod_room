@@ -137,6 +137,13 @@ class room_plan implements renderable, templatable {
                         'id' => $this->modulecontext->instanceid
                     ]
                 );
+                $event->editurl = new moodle_url(
+                    '/mod/room/slotedit.php',
+                    [
+                        'slotid' => $event->id,
+                        'id' => $this->modulecontext->instanceid
+                    ]
+                );
             }
         }
         unset($event);

@@ -30,6 +30,7 @@ $string['newroom'] = 'New room';
 $string['addroom'] = 'Add room';
 $string['addslot'] = 'Add slot';
 $string['deleteslot'] = 'Delete slot';
+$string['updateslot'] = 'Update slot';
 $string['confirmdelete'] = 'Confirm delete';
 $string['bookable'] = 'Bookable';
 $string['duration'] = 'Duration';
