@@ -74,7 +74,7 @@ class room_plan implements renderable, templatable {
         if (has_capability('mod/room:editslots', $this->modulecontext)) {
             $url = new moodle_url(
                 '/mod/room/slotedit.php', 
-                array('id' => $this->modulecontext->instanceid));
+                array('id' => $this->modulecontext->instanceid, 'date' => $this->date));
             $label = get_string('addslot', 'mod_room');
             return html_writer::div(html_writer::link(
                 $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-slot-add m-t-1');

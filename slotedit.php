@@ -133,8 +133,9 @@ if ($slotid) {
         $formproperties->duration = $duration;
     }
 } else {
-    // Set new event to start today at midday by default
-    $formproperties->starttime = usergetmidnight(time()) + 12 * 60 * 60;
+    // Set new event to start on viewed date or today at midday by default
+    $vieweddate = optional_param('date', 0, PARAM_INT);
+    $formproperties->starttime = usergetmidnight($vieweddate ? $vieweddate : time()) + 12 * 60 * 60;
 }
 $mform->set_data($formproperties);
 
