@@ -118,16 +118,26 @@ class room_plan implements renderable, templatable {
             ])
         );
 
-        // Calculate human-readable date strings for start and end
         foreach ($this->events as &$event) {
+            // Calculate human-readable date strings for start and end
             $event->userdatestart = userdate(
                 $event->timestart, 
                 get_string('strftimedaydatetime', 'langconfig')
             );
-            // TODO: pass human-readable end time, or, if other day, date
-            // if ($event->duration) {
-            //     // If 
-            // }
+
+            // Pass human-readable end data if event has duration
+            if ($event->timeduration) {
+                // calculate end time, or, if other day, date
+                $endtime = $event->timestart + $event->timeduration;
+                $formatstring = (
+                    (usergetmidnight($event->timestart) == usergetmidnight($endtime)) ? 
+                    'strftimetime' : 
+                    'strftimedaydatetime'
+                );
+                $event->userdateend = userdate($endtime, get_string($formatstring, 'langconfig'));
+            }
+
+            // Pass edit and delete actions if user is capable
             $event->canedit = has_capability('mod/room:editslots', $this->modulecontext);
             if ($event->canedit) {
                 $event->deleteurl = new moodle_url(

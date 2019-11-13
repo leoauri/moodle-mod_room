@@ -41,7 +41,9 @@
         <div class="description card-body">
             <div class="row">
                 <div class="col-xs-1"><i class="icon fa fa-clock-o fa-fw " title="When" aria-label="When"></i></div>
-                <div class="col-xs-11">{{userdatestart}}</div>
+                <div class="col-xs-11">
+                    {{userdatestart}}{{#userdateend}} <strong>&raquo;</strong> {{userdateend}}{{/userdateend}}
+                </div>
             </div>
             <div class="row mt-1">
                 <div class="col-xs-1">{{#pix}} i/location, core, {{#str}} location {{/str}} {{/pix}}</div>
