@@ -55,9 +55,36 @@ class slot_edit extends \moodleform {
 
         $mform->addElement('date_time_selector', 'starttime', get_string('starttime', 'mod_room'));
 
-        $mform->addElement('text', 'duration', get_string('durationminutes', 'calendar'));
-        $mform->setType('duration', PARAM_INT);
-        $mform->addRule('duration', null, 'numeric', null, 'client');
+
+        $durationgroup = array();
+
+        $durationgroup[] = $mform->createElement(
+            'text', 
+            'hours', 
+            get_string('hours', 'mod_room'), 
+            ['size' => 3]
+        );
+        
+        $durationgroup[] = $mform->createElement(
+            'text', 
+            'minutes', 
+            get_string('minutes', 'mod_room'), 
+            ['size' => 3]
+        );
+        
+        $mform->addGroup(
+            $durationgroup, 
+            'duration', 
+            get_string('durationhoursminutes', 'mod_room'), 
+            '<span class="hms-form-separator">:</span>'
+        );
+        $mform->setType('duration[hours]', PARAM_INT);
+        $mform->setType('duration[minutes]', PARAM_INT);
+
+        $grouprules = array();
+        $grouprules['hours'] = [[null, 'numeric', null, 'client']];
+        $grouprules['minutes'] = [[null, 'numeric', null, 'client']];
+        $mform->addGroupRule('duration', $grouprules);
 
         $confirmmessage = $this->_customdata['slotid'] ? 'updateslot' : 'addslot';
 

@@ -28,6 +28,24 @@ Feature: Add slots
     And I press "Add room"
     And I log out
 
+  Scenario: Give slots a duration with hours and minutes
+    Given I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I follow "Room Plan"
+    And I follow "Add slot"
+    When I set the following fields to these values:
+      | Slot title | Duration celebration |
+      | Room | The Room |
+      | starttime[day] | 1 |
+      | starttime[month] | October |
+      | starttime[year] | 2020 |
+      | starttime[hour] | 11 |
+      | starttime[minute] | 00 |
+      | duration[hours] | 2 |
+      | duration[minutes] | 30 |
+    And I press "Add slot"
+    Then I should see "1 October 2020, 11:00 AM » 1:30 PM"
+
   Scenario: Admin can add a slot to the room plan
     Given I log in as "admin"
     And I am on "Course 1" course homepage

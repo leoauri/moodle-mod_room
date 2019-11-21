@@ -54,6 +54,23 @@ Feature: Edit slots
       | starttime[minute] | 30 |
     And I press "Add slot"
 
+  Scenario: Edit a slot with duration fetches HH:MM duration into the form
+    Given I click on "[data-event-title=\"Correct event\"] [data-action=\"edit\"]" "css_element"
+    And I set the following fields to these values:
+      | duration[hours] | 2 |
+      | duration[minutes] | 15 |
+    And I press "Update slot"
+    When I click on "[data-event-title=\"Correct event\"] [data-action=\"edit\"]" "css_element"
+    Then the "value" attribute of "#id_duration_hours" "css_element" should contain "2"
+    And the "value" attribute of "#id_duration_minutes" "css_element" should contain "15"
+    When I set the following fields to these values:
+      | duration[hours] | 0 |
+      | duration[minutes] | 80 |
+    And I press "Update slot"
+    And I click on "[data-event-title=\"Correct event\"] [data-action=\"edit\"]" "css_element"
+    Then the "value" attribute of "#id_duration_hours" "css_element" should contain "1"
+    And the "value" attribute of "#id_duration_minutes" "css_element" should contain "20"
+
   Scenario: Edit all slot fields
     Given I set the following fields to these values:
       | displaydate[day] | 1 |

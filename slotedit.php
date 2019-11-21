@@ -88,7 +88,7 @@ if ($mform->is_cancelled()) {
         $properties->type = CALENDAR_EVENT_TYPE_STANDARD;
         $properties->eventtype = ROOM_EVENT_TYPE_SLOT;
         $properties->timestart = $data->starttime;
-        $properties->timeduration = $data->duration * 60;
+        $properties->timeduration = $data->duration['hours'] * 60 * 60 + $data->duration['minutes'] * 60;
         $properties->name = $data->slottitle;
         
         // This saves the string room name to the calendar event, because it's the only way to display 
@@ -130,7 +130,10 @@ if ($slotid) {
     );
     $formproperties->starttime = $slot->timestart;
     if ($duration = (int)($slot->timeduration / 60)) {
-        $formproperties->duration = $duration;
+        $formproperties->duration = [];
+
+        $formproperties->duration['hours'] = intdiv($duration, 60);
+        $formproperties->duration['minutes'] = $duration % 60;
     }
 } else {
     // Set new event to start on viewed date or today at midday by default

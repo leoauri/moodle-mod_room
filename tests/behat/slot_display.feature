@@ -40,7 +40,7 @@ Feature: Slot display
       | starttime[year] | 2020 |
       | starttime[hour] | 10 |
       | starttime[minute] | 30 |
-      | duration | 65 |
+      | duration[minutes] | 65 |
     When I press "Add slot"
     Then I should see "2 January 2020, 10:30 AM » 11:35 AM"
 
@@ -53,7 +53,7 @@ Feature: Slot display
       | starttime[year] | 2021 |
       | starttime[hour] | 23 |
       | starttime[minute] | 00 |
-      | duration | 180 |
+      | duration[minutes] | 180 |
     When I press "Add slot"
     Then I should see "Sunday, 31 January 2021, 11:00 PM » Monday, 1 February 2021, 2:00 AM"
 
