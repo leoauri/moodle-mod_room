@@ -97,66 +97,13 @@ class room_plan implements renderable, templatable {
             return;
         }
 
-        $timestartfrom = $this->date;
-        $timestartto = $timestartfrom + 24 * 60 * 60;
-
-        // FIX: also return in-progress events, i.e. that start before day and haven't ended  :|
-        $sql = "SELECT e.* 
-            FROM {event} e
-            WHERE timestart >= :timefrom 
-                AND timestart <= :timeto
-                AND modulename = :modulename
-                AND instance = :instance";
-
-        global $DB;
-        $this->events = array_values(
-            $DB->get_records_sql($sql, [
-                'timefrom' => $timestartfrom,
-                'timeto' => $timestartto,
-                'modulename' => 'room',
-                'instance' => $this->moduleinstance->id,
-            ])
-        );
-
-        foreach ($this->events as &$event) {
-            // Calculate human-readable date strings for start and end
-            $event->userdatestart = userdate(
-                $event->timestart, 
-                get_string('strftimedaydatetime', 'langconfig')
-            );
-
-            // Pass human-readable end data if event has duration
-            if ($event->timeduration) {
-                // calculate end time, or, if other day, date
-                $endtime = $event->timestart + $event->timeduration;
-                $formatstring = (
-                    (usergetmidnight($event->timestart) == usergetmidnight($endtime)) ? 
-                    'strftimetime' : 
-                    'strftimedaydatetime'
-                );
-                $event->userdateend = userdate($endtime, get_string($formatstring, 'langconfig'));
-            }
-
-            // Pass edit and delete actions if user is capable
-            $event->canedit = has_capability('mod/room:editslots', $this->modulecontext);
-            if ($event->canedit) {
-                $event->deleteurl = new moodle_url(
-                    '/mod/room/slotdelete.php', 
-                    [
-                        'slotid' => $event->id,
-                        'id' => $this->modulecontext->instanceid
-                    ]
-                );
-                $event->editurl = new moodle_url(
-                    '/mod/room/slotedit.php',
-                    [
-                        'slotid' => $event->id,
-                        'id' => $this->modulecontext->instanceid
-                    ]
-                );
-            }
-        }
-        unset($event);
+        $options = [
+            'start' => $this->date, 
+            'end' => $this->date + 24 * 60 * 60, 
+            'instance' => $this->moduleinstance->id
+        ];
+        $this->events = new \mod_room\entity\slot_collection($options);
+        $this->events->prepare_display($this->modulecontext);
     }
 
     /**
@@ -169,7 +116,7 @@ class room_plan implements renderable, templatable {
         $this->retrieve_events();
         $output = new \stdClass();
         $output->events = $this->events;
-        if (! $output->events) {
+        if (! count($output->events)) {
             $output->noslotsmessage = get_string('noslots', 'mod_room');
         }
         return $output;

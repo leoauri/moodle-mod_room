@@ -66,48 +66,19 @@ $mform = new \mod_room\form\slot_edit(
 );
 
 // Set up slot and properties for either saving the slot or passing to the form
-if ($slotid) {
-    $slot = calendar_event::load($slotid);
-    // var_dump($slot);
-    $properties = $slot->properties();
-} else {
-    $properties = new stdClass();
-}
-
+$slot = new \mod_room\entity\slot($slotid);
 
 if ($mform->is_cancelled()) {
     redirect(new moodle_url('/mod/room/view.php', array('id' => $id)));
 } else if ($data = $mform->get_data()) {
     if (confirm_sesskey() && has_capability('mod/room:editslots', context_course::instance($course->id))) {
-        $properties->modulename = 'room';
-        $properties->courseid = $moduleinstance->course;
-        $properties->groupid = 0;
-        $properties->userid = 0;
-        $properties->instance = $moduleinstance->id;
+        $slot->set_slot_properties($data, $moduleinstance);
+        $slot->save();
 
-        $properties->type = CALENDAR_EVENT_TYPE_STANDARD;
-        $properties->eventtype = ROOM_EVENT_TYPE_SLOT;
-        $properties->timestart = $data->starttime;
-        $properties->timeduration = $data->duration['hours'] * 60 * 60 + $data->duration['minutes'] * 60;
-        $properties->name = $data->slottitle;
-        
-        // This saves the string room name to the calendar event, because it's the only way to display 
-        // it in moodle calendar.  Kind of silly because we just did the db lookup to build the form...
-        global $DB;
-        $properties->location = $DB->get_field('room_space', 'name', ['id' => $data->room]);
-
-        if ($slotid) {
-            $slot->update($properties);
-        } else {
-            calendar_event::create($properties, false);
-        }
-
-
-        // TODO: trigger add slot event
         redirect(
             new moodle_url(
                 '/mod/room/view.php', 
-                array('id' => $cm->id, 'date' => usergetmidnight($properties->timestart))
+                array('id' => $cm->id, 'date' => $slot->midnight())
             ), 
             get_string('changessaved'), 
             0
@@ -117,25 +88,9 @@ if ($mform->is_cancelled()) {
 
 // If we reach here we are not receiving a submitted form, we are displaying one
 
-$formproperties = new stdClass();
-// If we are editing an existing slot, send the existing data in
-if ($slotid) {
-    $formproperties->slottitle = $slot->name;
-    // Another silly lookup of the roomid this time
-    $formproperties->room = $DB->get_field_select(
-        'room_space', 
-        'id', 
-        'name = :name', 
-        ['name' => $slot->location]
-    );
-    $formproperties->starttime = $slot->timestart;
-    if ($duration = (int)($slot->timeduration / 60)) {
-        $formproperties->duration = [];
+$formproperties = $slot->form_properties();
 
-        $formproperties->duration['hours'] = intdiv($duration, 60);
-        $formproperties->duration['minutes'] = $duration % 60;
-    }
-} else {
+if (!isset($formproperties->starttime)) {
     // Set new event to start on viewed date or today at midday by default
     $vieweddate = optional_param('date', 0, PARAM_INT);
     $formproperties->starttime = usergetmidnight($vieweddate ? $vieweddate : time()) + 12 * 60 * 60;

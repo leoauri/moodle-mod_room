@@ -25,9 +25,9 @@
     {{#events}}
         {{> mod_room/slot_info }}
     {{/events}}
-    {{^events}}
+    {{#noslotsmessage}}
         <div class="mod-room-slots-no-results">
             {{noslotsmessage}}
         </div>
-    {{/events}}
+    {{/noslotsmessage}}
 </div>

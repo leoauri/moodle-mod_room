@@ -15,17 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * File containing tests for slot collection.
  *
  * @package     mod_room
+ * @category    test
  * @copyright   2019 Leo Auri <code@leoauri.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_room';
-$plugin->release = '1.1.0';
-$plugin->version  = 2019112500;
-$plugin->requires = 2019052000;
-$plugin->maturity = MATURITY_ALPHA;
+/**
+ * The slot collection test class.
+ *
+ * @package    mod_room
+ * @copyright  2019 Leo Auri <code@leoauri.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class mod_room_slot_collection_testcase extends advanced_testcase {
+    protected function setup() {
+        $this->resetAfterTest();
+    }
+
+    public function test_slot_retrieval() {
+        // set up some slots to retrieve
+        
+    }
+}
