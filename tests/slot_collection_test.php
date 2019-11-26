@@ -32,13 +32,13 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2019 Leo Auri <code@leoauri.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_room_slot_collection_testcase extends advanced_testcase {
-    protected function setup() {
-        $this->resetAfterTest();
-    }
+// class mod_room_slot_collection_testcase extends advanced_testcase {
+//     // protected function setup() {
+//     //     $this->resetAfterTest();
+//     // }
 
-    public function test_slot_retrieval() {
-        // set up some slots to retrieve
+//     // public function test_slot_retrieval() {
+//     //     // set up some slots to retrieve
         
-    }
-}
+//     // }
+// }
