@@ -33,6 +33,7 @@ Feature: Duplicate slots
       | starttime[year] | 2019 |
       | starttime[hour] | 12 |
       | starttime[minute] | 30 |
+      | spots | 7 |
     And I press "Add slot"
     And I follow "Add slot"
     And I set the following fields to these values:
@@ -59,6 +60,7 @@ Feature: Duplicate slots
     And I press "Duplicate"
     Then I should see "Weekly event"
     And I should see "8 December 2019, 12:30 PM"
+    And I should see "Free spots: 7" in the "[data-event-title=\"Weekly event\"]" "css_element"
     When I set the following fields to these values:
       | displaydate[day] | 9 |
       | displaydate[month] | December |
@@ -80,6 +82,7 @@ Feature: Duplicate slots
     And I press "Duplicate"
     Then I should see "Weekly event"
     And I should see "8 December 2019, 12:30 PM"
+    And I should see "Free spots: 7" in the "[data-event-title=\"Weekly event\"]" "css_element"
     When I set the following fields to these values:
       | displaydate[day] | 9 |
       | displaydate[month] | December |
