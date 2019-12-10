@@ -65,6 +65,7 @@ Feature: Book slots
     When I click on "[data-event-title=\"Second event\"] [data-action=\"book-spot-button\"]" "css_element"
     Then I should see "Free spots: 1" in the "[data-event-title=\"Nice event\"]" "css_element"
     And I should see "Free spots: 1" in the "[data-event-title=\"Second event\"]" "css_element"
+    And I should not see "Book spot" in the "[data-event-title=\"Second event\"]" "css_element"
     And I should see "Booked by: Student One" in the "[data-event-title=\"Second event\"]" "css_element"
     When I click on "[data-event-title=\"Nice event\"] [data-action=\"book-spot-button\"]" "css_element"
     Then I should not see "Free spots" in the "[data-event-title=\"Nice event\"]" "css_element"

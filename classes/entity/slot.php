@@ -24,7 +24,12 @@
 
 namespace mod_room\entity;
 
+use moodle_url;
+
 defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot . '/calendar/lib.php');
+require_once($CFG->dirroot . '/mod/room/lib.php');
 
 /**
  * Room module slot class.
@@ -58,7 +63,7 @@ class slot {
     /**
      * @var int id of slot record
      */
-    private $slotid;
+    public $slotid;
 
     /**
      * @var int id of course event belongs to
@@ -123,6 +128,21 @@ class slot {
     public $bookingsfree;
 
     /**
+     * @var object action and message for spot booking
+     */
+    public $spotbooking;
+
+    /**
+     * @var string users who have booked the spot message
+     */
+    public $bookedby;
+
+    /**
+     * @var booking_collection slot bookings
+     */
+    private $bookings;
+
+    /**
      * Prepare properties for display by a template
      */
     public function prepare_display(\context_module $modulecontext) {
@@ -163,32 +183,102 @@ class slot {
             );
         }
 
-        $this->bookingsfree = $this->spots;
+        $this->bookingsfree = max($this->spots - count($this->bookings), 0);
+
+        // if there are free spots
+        // TODO: if the user hasn't booked and the user can book
+        if ($this->bookingsfree > 0 && $this->bookings && !$this->bookings->user_has_booked()) {
+            $this->spotbooking = (object)[
+                'action' => new moodle_url('/mod/room/spotbook.php', [
+                    'slotid' => $this->slotid,
+                    'id' => $modulecontext->instanceid,
+                    'date' => usergetmidnight($this->timestart)
+                ]),
+                'message' => get_string('bookspot', 'mod_room')
+            ];
+        } else {
+            $this->spotbooking = null;
+        }
+
+        if ($this->bookings && count($this->bookings) > 0) {
+            $fullnames = [];
+            foreach ($this->bookings as $booking) {
+                $fullnames[] = $booking->firstname . ' ' . $booking->lastname;
+            }
+            $this->bookedby = get_string('bookedby', 'mod_room') . ': ' . implode(', ', $fullnames);
+        }
     }
 
+    /**
+     * Load slot properties from the database
+     * @param array passed to the database query
+     */
+    private function load_slotproperties(array $params) {
+        global $DB;
+
+        // check if record exists, since old versions didn't have this table
+        if ($slotproperties = $DB->get_record('room_slot', $params)) {
+            $this->slotid = (int)$slotproperties->id;
+            $this->id = (int)$slotproperties->eventid;
+            
+            $this->spots = $slotproperties->spots;
+            $this->bookings = new booking_collection($this->slotid);
+        }
+    }
 
     /**
-     * Slot constructor. Passing an event id will load it, otherwise construct a fresh slot.
+     * Load calendar event from database
+     * @param int eventid
      */
-    public function __construct(int $eventid = null) {
-        if ($eventid) {
-            $this->event = \calendar_event::load($eventid);
+    private function load_event(int $eventid) {
+        $this->event = \calendar_event::load($eventid);
 
-            $eventproperties = $this->event->properties();
-            $this->id = $eventproperties->id;
-            $this->timestart = $eventproperties->timestart;
-            $this->timeduration = $eventproperties->timeduration;
-            $this->courseid = $eventproperties->courseid;
-            $this->instance = $eventproperties->instance;
-            $this->name = $eventproperties->name;
-            $this->location = $eventproperties->location;
+        $eventproperties = $this->event->properties();
+        $this->id = (int)$eventproperties->id;
+        $this->timestart = $eventproperties->timestart;
+        $this->timeduration = $eventproperties->timeduration;
+        $this->courseid = $eventproperties->courseid;
+        $this->instance = $eventproperties->instance;
+        $this->name = $eventproperties->name;
+        $this->location = $eventproperties->location;
+}
+
+    /**
+     * Slot constructor. 
+     * Accept eventid as int, or array defining 'slotid'
+     * Accept null to construct a fresh slot.
+     */
+    public function __construct($param = null) {
+        // TODO: refactor to static functions load_from_slotid and load_from_eventid
+        // and have the constructor take all possible datas so it can be passed results from the database
+        $eventid = null;
+        $slotid = null;
+
+        if (is_int($param)) {
+            $eventid = $param;
+        } elseif (is_array($param) && $param['slotid']) {
+            $slotid = $param['slotid'];
+
+            if (!is_int($slotid)) {
+                throw new \InvalidArgumentException('slotid must be integer');
+            }
+
+        } elseif (!is_null($param)) {
+            throw new \InvalidArgumentException(
+                __CLASS__ . '::' . __FUNCTION__ . 
+                ' accepts eventid as integer or array defining key slotid' . "\n" .
+                'Passed param of type ' . gettype($param)
+            );
+        }
+
+        if ($eventid) {
+            $this->load_event($eventid);
 
             // Load slot database record, if it exists
-            global $DB;
-            if ($slotproperties = $DB->get_record('room_slot', array('eventid' => $eventid), '*')) {
-                $this->slotid = $slotproperties->id;
-                $this->spots = $slotproperties->spots;
-            }
+            $this->load_slotproperties(['eventid' => $eventid]);
+        } elseif ($slotid) {
+            $this->load_slotproperties(['id' => $slotid]);
+            $this->load_event($this->id);
         }
     }
 
@@ -202,8 +292,12 @@ class slot {
         $this->instance = $moduleinstance->id;
         
         $this->timestart = $data->starttime;
-        $this->timeduration = 
-            $data->duration['hours'] * 60 * 60 + $data->duration['minutes'] * 60;
+        
+        if (isset($data->duration)) {
+            $this->timeduration = 
+                $data->duration['hours'] * 60 * 60 + $data->duration['minutes'] * 60;
+        }
+
         $this->name = $data->slottitle;
         
         // This saves the string room name to the calendar event, because it's the only way to display 
@@ -211,7 +305,9 @@ class slot {
         global $DB;
         $this->location = $DB->get_field('room_space', 'name', ['id' => $data->room]);
         
-        $this->spots = $data->spots;
+        if (isset($data->spots)) {
+            $this->spots = $data->spots;
+        }
     }
 
     private function event_properties() {
@@ -220,7 +316,8 @@ class slot {
             'courseid' => $this->courseid,
             'instance' => $this->instance,
             'timestart' => $this->timestart,
-            'timeduration' => $this->timeduration,
+            // event table for some reason defines timeduration as non-null
+            'timeduration' => $this->timeduration ?? 0,
             'name' => $this->name,
             'location' => $this->location,
             'modulename' => $this->modulename,
@@ -260,7 +357,7 @@ class slot {
             // TODO: event logging
         } else {
             $this->event = \calendar_event::create($this->event_properties(), false);
-            $this->id = $this->event->id;
+            $this->id = (int)$this->event->id;
             
             // TODO: event logging
         }
@@ -315,5 +412,13 @@ class slot {
         
         // Clone non-event slot properties
         $this->spots = $slot->spots;
+    }
+
+    public function new_booking(int $userid) {
+        if (!$this->bookings) {
+            $this->bookings = new booking_collection($this->slotid);
+        }
+
+        $this->bookings->new_booking($userid);
     }
 }

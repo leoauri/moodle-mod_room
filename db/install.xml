@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/room/db" VERSION="20191126" COMMENT="XMLDB file for Moodle mod/room"
+<XMLDB PATH="mod/room/db" VERSION="20191209" COMMENT="XMLDB file for Moodle mod/room"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -51,6 +51,22 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="usermodified" TYPE="foreign" FIELDS="usermodified" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="eventid" TYPE="foreign-unique" FIELDS="eventid" REFTABLE="event" REFFIELDS="id" COMMENT="Associated calendar event."/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="room_booking" COMMENT="Participants can book spots in slots.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="slotid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Slot the booking is for."/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who booked the spot."/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="slotid" TYPE="foreign" FIELDS="slotid" REFTABLE="room_slot" REFFIELDS="id" COMMENT="Reference to booked slot."/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="User who booked the spot."/>
+        <KEY NAME="usermodified" TYPE="foreign" FIELDS="usermodified" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

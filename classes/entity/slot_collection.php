@@ -75,7 +75,7 @@ class slot_collection implements \IteratorAggregate, \Countable {
         $results = array_values($DB->get_records_sql($sql, $searchoptions));
         $this->slots = [];
         foreach ($results as $result) {
-            $this->slots[] = new slot($result->id);
+            $this->slots[] = new slot((int)$result->id);
         }
     }
 

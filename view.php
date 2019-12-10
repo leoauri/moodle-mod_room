@@ -72,7 +72,6 @@ if ($date) {
 }
 
 if ($dateselected = $dateselector->get_data()) {
-    // $dateselected = $dateselected->displaydate;
     redirect(new moodle_url('/mod/room/view.php', array('id' => $cm->id, 'date' => $dateselected->displaydate)));
 }
 
@@ -82,14 +81,10 @@ echo $OUTPUT->heading(format_string($moduleinstance->name));
 
 $roomplan = new room_plan($modulecontext, $moduleinstance, $date);
 
-// echo $roomplan->render();
-
 $dateselector->display();
 
 $renderer = $PAGE->get_renderer('mod_room');
 echo $renderer->render($roomplan);
-
-// echo $roomplan->list_slots();
 
 echo $roomplan->edit_slot_button();
 

@@ -100,3 +100,6 @@ $string['duplicateslots'] = 'Duplicate slots';
 $string['duplicationmode'] = 'Duplication mode';
 $string['oneweeklater'] = 'One week later';
 $string['freespots'] = 'Free spots';
+$string['bookspot'] = 'Book spot';
+$string['spotbooked'] = 'Spot booked';
+$string['bookedby'] = 'Booked by';

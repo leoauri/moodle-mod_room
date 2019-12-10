@@ -154,5 +154,6 @@ function room_extend_settings_navigation(settings_navigation $settingsnav, navig
 function mod_room_get_fontawesome_icon_map() {
     return [
         'mod_room:i/cookie' => 'fa-cookie',
+        'mod_room:i/cookie-bite' => 'fa-cookie-bite',
     ];
 }

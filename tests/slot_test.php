@@ -38,13 +38,14 @@ class mod_room_slot_testcase extends advanced_testcase {
     private $course;
     private $roomplan;
     private $roomspace;
+    private $datagenerator;
 
     protected function setup() {
         $this->resetAfterTest();
         $this->setAdminUser();
-        $datagenerator = $this->getDataGenerator();
-        $this->course = $datagenerator->create_course();
-        $this->roomplan = $datagenerator->create_module('room', ['course' => $this->course->id]);
+        $this->datagenerator = $this->getDataGenerator();
+        $this->course = $this->datagenerator->create_course();
+        $this->roomplan = $this->datagenerator->create_module('room', ['course' => $this->course->id]);
 
         // Set up space
         $this->roomspace = new stdClass();
@@ -75,7 +76,7 @@ class mod_room_slot_testcase extends advanced_testcase {
             'eventtype' => ROOM_EVENT_TYPE_SLOT
         ], false);
 
-        $slot = new \mod_room\entity\slot($event->id);
+        $slot = new slot($event->id);
 
         $this->assertEquals($slot->name, 'Old slot');
 
@@ -126,5 +127,164 @@ class mod_room_slot_testcase extends advanced_testcase {
         $clonedslot = new slot();
         $clonedslot->clone_slot($originalslot);
         $this->assertSlotsPropertiesEqual($loadedslot, $clonedslot);
+    }
+
+    public function test_prepare_display_id_mismatch() {
+        // There could be a mismatch between eventid and slotid
+        // Test that prepare display links to the slotid
+        // Old style calendar event like in mod_room v1.1.1
+        calendar_event::create((object)[
+            'courseid' => $this->course->id,
+            'instance' => $this->roomplan->id,
+            'timestart' => time(),
+            'timeduration' => 60 * 60,
+            'name' => 'Old slot',
+            'location' => 'Invalid room',
+            'modulename' => 'room',
+            'groupid' => 0,
+            'userid' => 0,
+            'type' => CALENDAR_EVENT_TYPE_STANDARD,
+            'eventtype' => ROOM_EVENT_TYPE_SLOT
+        ], false);
+
+        $slotsettings = (object)[
+            'courseid' => $this->course->id,
+            'instance' => $this->roomplan->id,
+            'starttime' => time(),
+            'duration' => [
+                'hours' => 1,
+                'minutes' => 0
+            ],
+            'spots' => 2,
+            'slottitle' => 'wonderful event',
+            'room' => $this->roomspace->id
+        ];
+        $newslot = new slot();
+        $newslot->set_slot_properties($slotsettings, $this->roomplan);
+        $newslot->save();
+
+        $loadedslot = new slot(['slotid' => $newslot->slotid]);
+        $this->assertNotEquals($loadedslot->slotid, $loadedslot->id);
+
+        $loadedslot->prepare_display(context_module::instance($this->roomplan->cmid));
+        $this->assertEquals($loadedslot->slotid, $loadedslot->spotbooking->action->get_param('slotid'));
+    }
+
+    public function test_prepare_display() {
+        $slotsettings = (object)[
+            'courseid' => $this->course->id,
+            'instance' => $this->roomplan->id,
+            'starttime' => time(),
+            'slottitle' => 'Slot with spot',
+            'room' => $this->roomspace->id
+        ];
+        $slot = new slot();
+        $slot->set_slot_properties($slotsettings, $this->roomplan);
+
+        // test no spotbooking without spots
+        $slot->prepare_display(context_module::instance($this->roomplan->cmid));
+
+        $this->assertNull($slot->spotbooking);
+
+        // test that spotbooking when there is a free spot
+        $slot->spots = 1;
+        $slot->save();
+        $slot = new slot($slot->id);
+        $slot->prepare_display(context_module::instance($this->roomplan->cmid));
+
+        $this->assertNotNull($slot->spotbooking);
+
+        $this->assertEquals('Book spot', $slot->spotbooking->message);
+        $this->assertEquals('/moodle/mod/room/spotbook.php', $slot->spotbooking->action->get_path());
+
+        // test that spotbooking when there are free spots
+        $slot->spots = 2;
+        $slot->save();
+        $slot = new slot($slot->id);
+        $slot->prepare_display(context_module::instance($this->roomplan->cmid));
+
+        $this->assertNotNull($slot->spotbooking);
+
+        $this->assertEquals('Book spot', $slot->spotbooking->message);
+        $this->assertEquals('/moodle/mod/room/spotbook.php', $slot->spotbooking->action->get_path());
+
+        // test that no spotbooking when user has already booked
+        $slot->save();
+
+        $user = $this->datagenerator->create_user();
+        $this->setUser($user);
+
+        $slot->prepare_display(context_module::instance($this->roomplan->cmid));
+        $this->assertEquals(2, $slot->bookingsfree);
+        $this->assertNotNull($slot->spotbooking);
+
+        $slot->new_booking($user->id);
+
+        $slot->prepare_display(context_module::instance($this->roomplan->cmid));
+        $this->assertEquals(1, $slot->bookingsfree);
+        $this->assertNull($slot->spotbooking);
+
+        // test that no spotbooking when user does not have capability
+        // TODO: test that spotbooking when some spots are booked
+        // TODO: test that no spotbooking when all spots are booked
+    }
+
+    public function test_constructor() {
+        // check that constructing from slotid works and returns saved values
+        $slotsettings = (object)[
+            'courseid' => $this->course->id,
+            'instance' => $this->roomplan->id,
+            'starttime' => time(),
+            'duration' => [
+                'hours' => 1,
+                'minutes' => 0
+            ],
+            'spots' => 2,
+            'slottitle' => 'wonderful event',
+            'room' => $this->roomspace->id
+        ];
+        $slot = new slot();
+        $slot->set_slot_properties($slotsettings, $this->roomplan);
+        $slot->save();
+
+        $loadedslot = new slot(['slotid' => $slot->slotid]);
+
+        $this->assertEquals($slot->timestart, $loadedslot->timestart, 'timestart not loaded.');
+        $this->assertEquals(60 * 60, $loadedslot->timeduration);
+        $this->assertEquals(2, $loadedslot->spots);
+        $this->assertEquals('wonderful event', $loadedslot->name);
+    }
+
+    public function test_new_booking() {
+        $slotsettings = (object)[
+            'courseid' => $this->course->id,
+            'instance' => $this->roomplan->id,
+            'starttime' => time(),
+            'duration' => [
+                'hours' => 1,
+                'minutes' => 0
+            ],
+            'spots' => 1,
+            'slottitle' => 'wonderful event',
+            'room' => $this->roomspace->id
+        ];
+        $slot = new slot();
+        $slot->set_slot_properties($slotsettings, $this->roomplan);
+        $slot->save();
+
+        $slot = new slot($slot->id);
+        $slot->prepare_display(context_module::instance($this->roomplan->cmid));
+        $this->assertNotNull($slot->spotbooking);
+        
+        $user = $this->datagenerator->create_user();
+        $slot->new_booking($user->id);
+
+        $slot->prepare_display(context_module::instance($this->roomplan->cmid));
+        $this->assertNull($slot->spotbooking);
+
+        // Check that booking is loaded correctly
+        $loadedslot = new slot(['slotid' => $slot->slotid]);
+        $loadedslot->prepare_display(context_module::instance($this->roomplan->cmid));
+        $this->assertNull($loadedslot->spotbooking);
     }
 }

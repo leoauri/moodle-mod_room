@@ -55,6 +55,17 @@
                 <div class="col-xs-11">{{#str}} freespots, mod_room {{/str}}: {{bookingsfree}}</div>
             </div>
             {{/bookingsfree}}
+            {{#bookedby}}
+            <div class="row mt-1">
+                <div class="col-xs-1">{{#pix}} i/cookie-bite, mod_room, {{#str}} bookedby, mod_room {{/str}} {{/pix}}</div>
+                <div class="col-xs-11">{{bookedby}}</div>
+            </div>
+            {{/bookedby}}
+            {{#spotbooking}}
+            <div class="roomplan-spot-booking m-t-1">
+                <a class="btn btn-secondary" href="{{{action}}}" data-action="book-spot-button">{{message}}</a>
+            </div>
+            {{/spotbooking}}
         </div>
     </div>
 </div>

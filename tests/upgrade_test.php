@@ -82,5 +82,15 @@ class mod_room_upgrade_testcase extends advanced_testcase {
         }
 
         // No way of testing keys!  Apparently
+
+        // Check that booking table is present
+        $tables = $DB->get_tables(false);
+        $this->assertArrayHasKey('room_booking', $tables);
+        
+        $columns = $DB->get_columns('room_booking', false);
+        $this->assertEquals(
+            ['id', 'slotid', 'userid', 'usermodified', 'timecreated', 'timemodified'], 
+            array_keys($columns)
+        );
     }
 }

@@ -86,7 +86,7 @@ class room_plan implements renderable, templatable {
             $url = new moodle_url('/mod/room/roomadmin.php', ['id' => $this->modulecontext->instanceid]);
             $label = get_string('roomadministration', 'mod_room');
             return html_writer::div(html_writer::link(
-                $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-slot-add m-t-1');
+                $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-room-admin m-t-1');
         }
     }
 

@@ -30,8 +30,6 @@ use renderable;
 use renderer_base;
 use templatable;
 
-// use \core_calendar\local\api as calendar_api;
-
 /**
  * Room plan renderable.
  *
@@ -43,7 +41,6 @@ class room_list implements renderable, templatable {
     public function export_for_template(renderer_base $renderer) {
         global $DB;
         $rooms = array_values($DB->get_records('room_space'));
-        // var_dump($rooms);
         $output = new \stdClass();
         $output->rooms = $rooms;
         return $output;

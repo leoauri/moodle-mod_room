@@ -15,17 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Room module booking class.
  *
  * @package     mod_room
  * @copyright   2019 Leo Auri <code@leoauri.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_room\entity;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_room';
-$plugin->release = '1.2.0-beta.2';
-$plugin->version  = 2019121000;
-$plugin->requires = 2019052000;
-$plugin->maturity = MATURITY_ALPHA;
+/**
+ * Room module booking class.
+ *
+ * @package    mod_room
+ * @copyright  2019 Leo Auri <code@leoauri.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class booking {
+    
+}
