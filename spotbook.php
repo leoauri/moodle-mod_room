@@ -35,22 +35,28 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 require_login($course, true, $cm);
 $PAGE->set_url('/mod/room/spotbook.php', array('id' => $id, 'slotid' => $slotid));
 
-// TODO: check user capability in context
-// TODO: check there are actually free spots, so it can't be hijacked by directly loading the url
-// if freespots > 0
+$action = optional_param('action', 'book', PARAM_ALPHA);
 
 $slot = new \mod_room\entity\slot(['slotid' => $slotid]);
 global $USER;
-$slot->new_booking($USER->id);
 
-// TODO: trigger booking event
+if ($action == 'cancel') {
+    $slot->booking_cancel($USER->id);
+    $message = get_string('bookingcancelled', 'mod_room');
+    // TODO: trigger event
+} elseif ($action == 'book') {
+    $slot->new_booking($USER->id);
+    $message = get_string('spotbooked', 'mod_room');
+    // TODO: trigger booking event
+}
 
 $redirectparams = ['id' => $id];
 
+// TODO: remove this param and use the date from the slot itself
+// TODO: add anchor to the booked slot
 $date = optional_param('date', 0, PARAM_INT);
 if ($date) {
     $redirectparams['date'] = $date;
-    // TODO: add anchor to the booked slot
 }
 
-redirect(new moodle_url('/mod/room/view.php', $redirectparams), get_string('spotbooked', 'mod_room'), 0);
+redirect(new moodle_url('/mod/room/view.php', $redirectparams), $message, 0);

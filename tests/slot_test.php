@@ -171,10 +171,11 @@ class mod_room_slot_testcase extends advanced_testcase {
     }
 
     public function test_prepare_display() {
+        $now = new DateTimeImmutable();
         $slotsettings = (object)[
             'courseid' => $this->course->id,
             'instance' => $this->roomplan->id,
-            'starttime' => time(),
+            'starttime' => $now->add(new DateInterval('P1M'))->getTimestamp(),
             'slottitle' => 'Slot with spot',
             'room' => $this->roomspace->id
         ];
@@ -208,7 +209,7 @@ class mod_room_slot_testcase extends advanced_testcase {
         $this->assertEquals('Book spot', $slot->spotbooking->message);
         $this->assertEquals('/moodle/mod/room/spotbook.php', $slot->spotbooking->action->get_path());
 
-        // test that no spotbooking when user has already booked
+        // test that "cancel booking" when user has already booked and slot is in future
         $slot->save();
 
         $user = $this->datagenerator->create_user();
@@ -222,8 +223,29 @@ class mod_room_slot_testcase extends advanced_testcase {
 
         $slot->prepare_display(context_module::instance($this->roomplan->cmid));
         $this->assertEquals(1, $slot->bookingsfree);
+        $this->assertEquals('Cancel booking', $slot->spotbooking->message);
+        $this->assertEquals('/moodle/mod/room/spotbook.php', $slot->spotbooking->action->get_path());
+        $this->assertEquals('cancel', $slot->spotbooking->action->get_param('action'));
+
+        // test that null spotbooking when user has already booked and slot is in past
+        $slotsettings = (object)[
+            'courseid' => $this->course->id,
+            'instance' => $this->roomplan->id,
+            'starttime' => $now->sub(new DateInterval('P1M'))->getTimestamp(),
+            'slottitle' => 'Slot with spot',
+            'room' => $this->roomspace->id,
+            'spots' => 2,
+        ];
+        $slot = new slot();
+        $slot->set_slot_properties($slotsettings, $this->roomplan);
+        $slot->save();
+        $slot = new slot($slot->id);
+        $slot->new_booking($user->id);
+        $slot->prepare_display(context_module::instance($this->roomplan->cmid));
+
         $this->assertNull($slot->spotbooking);
 
+        // test that null spotbooking when slot is in past
         // test that no spotbooking when user does not have capability
         // TODO: test that spotbooking when some spots are booked
         // TODO: test that no spotbooking when all spots are booked
@@ -286,5 +308,10 @@ class mod_room_slot_testcase extends advanced_testcase {
         $loadedslot = new slot(['slotid' => $slot->slotid]);
         $loadedslot->prepare_display(context_module::instance($this->roomplan->cmid));
         $this->assertNull($loadedslot->spotbooking);
+
+        // check the slot with all bookings taken cannot be booked again, even by another user
+        $anotheruser = $this->datagenerator->create_user();
+        $this->expectException('moodle_exception');
+        $loadedslot->new_booking($anotheruser->id);
     }
 }

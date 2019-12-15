@@ -140,7 +140,7 @@ class slot {
     /**
      * @var booking_collection slot bookings
      */
-    private $bookings;
+    public $bookings;
 
     /**
      * Prepare properties for display by a template
@@ -183,29 +183,46 @@ class slot {
             );
         }
 
-        $this->bookingsfree = max($this->spots - count($this->bookings), 0);
-
-        // if there are free spots
-        // TODO: if the user hasn't booked and the user can book
-        if ($this->bookingsfree > 0 && $this->bookings && !$this->bookings->user_has_booked()) {
-            $this->spotbooking = (object)[
-                'action' => new moodle_url('/mod/room/spotbook.php', [
-                    'slotid' => $this->slotid,
-                    'id' => $modulecontext->instanceid,
-                    'date' => usergetmidnight($this->timestart)
-                ]),
-                'message' => get_string('bookspot', 'mod_room')
-            ];
-        } else {
-            $this->spotbooking = null;
-        }
-
-        if ($this->bookings && count($this->bookings) > 0) {
-            $fullnames = [];
-            foreach ($this->bookings as $booking) {
-                $fullnames[] = $booking->firstname . ' ' . $booking->lastname;
+        // prepare display for bookings if we have a bookings collection object
+        if ($this->bookings) {
+            $this->bookingsfree = max($this->spots - count($this->bookings), 0);
+    
+            // if there are free spots
+            // TODO: if the user hasn't booked and the user can book
+            if ($this->bookingsfree > 0 && !$this->bookings->user_has_booked()) {
+                $this->spotbooking = (object)[
+                    'action' => new moodle_url('/mod/room/spotbook.php', [
+                        'slotid' => $this->slotid,
+                        'id' => $modulecontext->instanceid,
+                        'date' => usergetmidnight($this->timestart),
+                    ]),
+                    'message' => get_string('bookspot', 'mod_room'),
+                    'buttonaction' => 'book-spot'
+                ];
+            } 
+            // add cancel booking button if user has booked and slot in future
+            elseif ($this->bookings->user_has_booked() && time() < $this->timestart) {
+                $this->spotbooking = (object)[
+                    'action' => new moodle_url('/mod/room/spotbook.php', [
+                        'slotid' => $this->slotid,
+                        'id' => $modulecontext->instanceid,
+                        'date' => usergetmidnight($this->timestart),
+                        'action' => 'cancel'
+                    ]),
+                    'message' => get_string('cancelbooking', 'mod_room'),
+                    'buttonaction' => 'booking-cancel'
+                ];
+            } else {
+                $this->spotbooking = null;
             }
-            $this->bookedby = get_string('bookedby', 'mod_room') . ': ' . implode(', ', $fullnames);
+    
+            if (count($this->bookings) > 0) {
+                $fullnames = [];
+                foreach ($this->bookings as $booking) {
+                    $fullnames[] = $booking->firstname . ' ' . $booking->lastname;
+                }
+                $this->bookedby = get_string('bookedby', 'mod_room') . ': ' . implode(', ', $fullnames);
+            }
         }
     }
 
@@ -419,6 +436,21 @@ class slot {
             $this->bookings = new booking_collection($this->slotid);
         }
 
+        if (count($this->bookings) >= $this->spots) {
+            throw new \moodle_exception('Full slot cannot be booked further');
+        }
+
         $this->bookings->new_booking($userid);
+    }
+
+    public function booking_cancel(int $userid) {
+        if (!$this->bookings) {
+            $this->bookings = new booking_collection($this->slotid);
+        }
+        if ($this->timestart < time()) {
+            throw new \moodle_exception('Past booking cannot be cancelled');
+        }
+
+        $this->bookings->booking_cancel($userid);
     }
 }

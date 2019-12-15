@@ -103,3 +103,5 @@ $string['freespots'] = 'Free spots';
 $string['bookspot'] = 'Book spot';
 $string['spotbooked'] = 'Spot booked';
 $string['bookedby'] = 'Booked by';
+$string['cancelbooking'] = 'Cancel booking';
+$string['bookingcancelled'] = 'Booking cancelled';

@@ -118,9 +118,23 @@ class booking_collection implements \IteratorAggregate, \Countable {
 
         foreach ($this->bookings as $booking) {
             if ($booking->userid == $userid) {
-                return true;
+                return $booking;
             }
         }
         return false;
+    }
+
+    public function booking_cancel(int $userid) {
+        if ($booking = $this->user_has_booked($userid)) {
+            // delete from database
+            global $DB;
+            $DB->delete_records('room_booking', ['id' => $booking->id]);
+            // refresh records
+            $this->refresh_records();
+            // TODO: log event
+        } else {
+            throw new \moodle_exception('No booking by user to cancel');
+        }
+        
     }
 }
