@@ -27,17 +27,22 @@ require_once(__DIR__.'/lib.php');
 
 use mod_room\output\room_list;
 
-// // Course_module ID, or
-// $id = optional_param('id', 0, PARAM_INT);
+// Course_module ID, or
+$id = optional_param('id', null, PARAM_INT);
 
 // // ... module instance id.
 // $r  = optional_param('r', 0, PARAM_INT);
 
-// if ($id) {
-//     $cm             = get_coursemodule_from_id('room', $id, 0, false, MUST_EXIST);
-//     $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-//     $moduleinstance = $DB->get_record('room', array('id' => $cm->instance), '*', MUST_EXIST);
-// } else if ($r) {
+$cm = null;
+$course = null;
+$moduleinstance = null;
+
+if ($id) {
+    $cm             = get_coursemodule_from_id('room', $id, 0, false, MUST_EXIST);
+    $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $moduleinstance = $DB->get_record('room', array('id' => $cm->instance), '*', MUST_EXIST);
+} 
+// else if ($r) {
 //     $moduleinstance = $DB->get_record('room', array('id' => $n), '*', MUST_EXIST);
 //     $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
 //     $cm             = get_coursemodule_from_instance('room', $moduleinstance->id, $course->id, false, MUST_EXIST);
@@ -45,16 +50,21 @@ use mod_room\output\room_list;
 
 $sitecontext = context_system::instance();
 
+// TODO: must also require login
+require_login($course, true, $cm);
 require_capability('mod/room:editrooms', $sitecontext);
 
-// if ($id) {
-//     $modulecontext = context_module::instance($cm->id);
-//     $PAGE->set_context($modulecontext);
-// } else {
-// }
-$PAGE->set_context($sitecontext);
 
-$PAGE->set_url('/mod/room/roomadmin.php');
+
+if ($id) {
+    $modulecontext = context_module::instance($cm->id);
+    $PAGE->set_context($modulecontext);
+} else {
+    $PAGE->set_context($sitecontext);
+}
+
+// TODO: set url id param if id passed in
+$PAGE->set_url('/mod/room/roomedit.php', array('id' => $id));
 $PAGE->set_title(get_string('roomadministration', 'mod_room'));
 $PAGE->set_heading(get_string('roomadministration', 'mod_room'));
 
@@ -68,5 +78,7 @@ $roomlist = new room_list();
 
 $renderer = $PAGE->get_renderer('mod_room');
 echo $renderer->render($roomlist);
+
+echo $roomlist->button_room_new($id);
 
 echo $OUTPUT->footer();

@@ -134,8 +134,9 @@ function room_extend_settings_navigation(settings_navigation $settingsnav, navig
     $context = $cm->context;
 
     if (has_capability('mod/room:editrooms', $context)) {
-        $roomnode->add(get_string('newroom', 'mod_room'), 
-            new moodle_url('roomedit.php', array('id' => $cm->id)));
+        $url = new moodle_url('/mod/room/roomadmin.php', ['id' => $cm->id]);
+        $label = get_string('roomadministration', 'mod_room');
+        $roomnode->add($label, $url);
     }
 
     if (has_capability('mod/room:editslots', $context)) {

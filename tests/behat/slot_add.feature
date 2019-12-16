@@ -1,4 +1,4 @@
-@mod @mod_room @mod_room_add_slot @street_college
+@mod @mod_room @mod_room_slot_add @street_college
 Feature: Add slots
   In order to organise use of physical spaces
   As a teacher
@@ -17,16 +17,12 @@ Feature: Add slots
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student |
       | admin    | C1     | manager |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Room Plan" to section "1" and I fill the form with:
-      | Display name | Room Plan |
-    And I follow "Room Plan"
-    And I navigate to "New room" in current page administration
-    And I set the following fields to these values:
-      | Room name | The Room |
-    And I press "Add room"
-    And I log out
+    And the following "activities" exist:
+      | activity | name      | course | idnumber |
+      | room     | Room Plan | C1     | roomplan |
+    And the following rooms are defined in the room module:
+      | roomname |
+      | The Room |
 
   Scenario: Give slots a duration with hours and minutes
     Given I log in as "teacher1"

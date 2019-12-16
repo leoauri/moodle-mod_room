@@ -1,4 +1,4 @@
-@mod @mod_room @street_college
+@mod @mod_room @mod_room_room_add @street_college
 Feature: Add rooms to be managed
   In order to manage use of physical spaces
   As a manager of my institution
@@ -21,9 +21,9 @@ Feature: Add rooms to be managed
     
   Scenario: Add a room to the Room Management plugin
     Given I follow "Room Plan"
-    And I navigate to "New room" in current page administration
+    And I navigate to "Room administration" in current page administration
+    And I follow "New room"
     And I set the following fields to these values:
       | Room name | The Room |
     And I press "Add room"
-    And I follow "Room administration"
     Then I should see "The Room"

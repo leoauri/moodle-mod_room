@@ -18,18 +18,14 @@ Feature: Distinguish between courses
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
       | student1 | C2     | student        |
+    And the following "activities" exist:
+      | activity | name      | course | idnumber  |
+      | room     | Room Plan | C1     | roomplan  |
+      | room     | Room Plan | C2     | roomplan2 |
+    And the following rooms are defined in the room module:
+      | roomname |
+      | The Room |
     And I log in as "admin"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Room Plan" to section "1" and I fill the form with:
-      | Display name | Room Plan |
-    And I am on "Course 2" course homepage
-    And I add a "Room Plan" to section "1" and I fill the form with:
-      | Display name | Room Plan |
-    And I follow "Room Plan"
-    And I navigate to "New room" in current page administration
-    And I set the following fields to these values:
-      | Room name | The Room |
-    And I press "Add room"
     And I am on "Course 1" course homepage
     And I follow "Room Plan"
     And I follow "Add slot"

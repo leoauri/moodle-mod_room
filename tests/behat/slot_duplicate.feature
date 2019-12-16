@@ -14,15 +14,14 @@ Feature: Duplicate slots
     And the following "course enrolments" exist:
       | user     | course | role    |
       | teacher1 | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity | name      | course | idnumber |
+      | room     | Room Plan | C1     | roomplan |
+    And the following rooms are defined in the room module:
+      | roomname |
+      | The Room |
     And I log in as "admin"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Room Plan" to section "1" and I fill the form with:
-      | Display name | Room Plan |
-    And I follow "Room Plan"
-    And I navigate to "New room" in current page administration
-    And I set the following fields to these values:
-      | Room name | The Room |
-    And I press "Add room"
+    And I am on "Course 1" course homepage
     And I follow "Room Plan"
     And I follow "Add slot"
     And I set the following fields to these values:

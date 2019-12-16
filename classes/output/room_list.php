@@ -45,4 +45,20 @@ class room_list implements renderable, templatable {
         $output->rooms = $rooms;
         return $output;
     }
+
+    /**
+     * @param int id of course module to return to
+     */
+    public function button_room_new(int $id = null) {
+        if (has_capability('mod/room:editrooms', \context_system::instance())) {
+            $url = new \moodle_url('/mod/room/roomedit.php');
+            if ($id) {
+                $url->param('id', $id);
+            }
+            $label = get_string('newroom', 'mod_room');
+            return \html_writer::div(\html_writer::link(
+                $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-room-admin m-t-1');
+        }
+    }
+
 }

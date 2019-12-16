@@ -88,7 +88,4 @@ echo $renderer->render($roomplan);
 
 echo $roomplan->edit_slot_button();
 
-echo $roomplan->room_admin_button();
-
-
 echo $OUTPUT->footer();
