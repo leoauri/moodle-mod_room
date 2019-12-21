@@ -90,7 +90,7 @@ class slot_edit extends \moodleform {
         $grouprules['minutes'] = [[null, 'numeric', null, 'client']];
         $mform->addGroupRule('duration', $grouprules);
 
-        $confirmmessage = $this->_customdata['slotid'] ? 'updateslot' : 'addslot';
+        $confirmmessage = $this->_customdata['eventid'] ? 'updateslot' : 'addslot';
 
         $this->add_action_buttons(true, get_string($confirmmessage, 'mod_room'));
     }

@@ -27,7 +27,7 @@ require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require_once($CFG->dirroot.'/calendar/lib.php');
 
-$slotid = required_param('slotid', PARAM_INT);
+$eventid = required_param('eventid', PARAM_INT);
 $confirm = optional_param('confirm', false, PARAM_BOOL);
 $id = required_param('id', PARAM_INT);
 
@@ -37,14 +37,14 @@ $moduleinstance = $DB->get_record('room', array('id' => $cm->instance), '*', MUS
 
 require_login($course, false, $cm);
 
-$PAGE->set_url('/mod/room/slotdelete.php', array('id' => $cm->id, 'slotid' => $slotid));
+$PAGE->set_url('/mod/room/slotdelete.php', array('id' => $cm->id, 'eventid' => $eventid));
 $PAGE->set_title(format_string($moduleinstance->name) . ': ' . get_string('deleteslot', 'mod_room'));
 $PAGE->set_heading(format_string($course->fullname));
 
 $modulecontext = context_module::instance($cm->id);
 $PAGE->set_context($modulecontext);
 
-$slot = calendar_event::load($slotid);
+$slot = calendar_event::load($eventid);
 
 // Setup redirect url with id of module and time set to day of event
 $returnurl = new moodle_url('/mod/room/view.php');
@@ -64,7 +64,7 @@ echo $OUTPUT->header();
 
 $deleteurl = new moodle_url(
     '/mod/room/slotdelete.php', 
-    ['slotid' => $slotid, 'id' => $id, 'confirm' => true]
+    ['eventid' => $eventid, 'id' => $id, 'confirm' => true]
 );
 
 $buttons = $OUTPUT->single_button($deleteurl, get_string('confirmdelete', 'mod_room'));

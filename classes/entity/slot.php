@@ -170,14 +170,14 @@ class slot {
             $this->deleteurl = new \moodle_url(
                 '/mod/room/slotdelete.php', 
                 [
-                    'slotid' => $this->id,
+                    'eventid' => $this->id,
                     'id' => $modulecontext->instanceid
                 ]
             );
             $this->editurl = new \moodle_url(
                 '/mod/room/slotedit.php',
                 [
-                    'slotid' => $this->id,
+                    'eventid' => $this->id,
                     'id' => $modulecontext->instanceid
                 ]
             );

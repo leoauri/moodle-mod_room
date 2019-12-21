@@ -55,18 +55,18 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
-$slotid = optional_param('slotid', 0, PARAM_INT);
+$eventid = optional_param('eventid', 0, PARAM_INT);
 
 $mform = new \mod_room\form\slot_edit(
     new moodle_url(
         '/mod/room/slotedit.php', 
-        array('id' => $id, 'slotid' => $slotid)
+        array('id' => $id, 'eventid' => $eventid)
     ), 
-    ['slotid' => $slotid]
+    ['eventid' => $eventid]
 );
 
 // Set up slot and properties for either saving the slot or passing to the form
-$slot = new \mod_room\entity\slot($slotid);
+$slot = new \mod_room\entity\slot($eventid);
 
 if ($mform->is_cancelled()) {
     redirect(new moodle_url('/mod/room/view.php', array('id' => $id)));
