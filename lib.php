@@ -26,6 +26,9 @@ defined('MOODLE_INTERNAL') || die();
 
 define('ROOM_EVENT_TYPE_SLOT', 'slot');
 
+define('ROOM_PLAN_TYPE_STANDARD', 0);
+define('ROOM_PLAN_TYPE_MASTER', 1);
+
 /**
  * Return if the plugin supports $feature.
  *
@@ -54,12 +57,14 @@ function room_supports($feature) {
  */
 function room_add_instance($moduleinstance, $mform = null) {
     global $DB;
+    global $USER;
 
     $moduleinstance->timecreated = time();
+    $moduleinstance->usermodified = $USER->id;
 
-    // Hard code room plans as non-master plans for now
+    // Standard room plans are default
     if (empty($moduleinstance->type)) {
-        $moduleinstance->type = 0;
+        $moduleinstance->type = ROOM_PLAN_TYPE_STANDARD;
     }
 
     $id = $DB->insert_record('room', $moduleinstance);

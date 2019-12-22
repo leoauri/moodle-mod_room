@@ -81,16 +81,6 @@ class room_plan implements renderable, templatable {
         }
     }
 
-    // public function room_admin_button() {
-    //     if (has_capability('mod/room:editrooms', \context_system::instance())) {
-    //         $url = new moodle_url('/mod/room/roomadmin.php', ['id' => $this->modulecontext->instanceid]);
-    //         $label = get_string('roomadministration', 'mod_room');
-    //         return html_writer::div(html_writer::link(
-    //             $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-room-admin m-t-1');
-    //     }
-    // }
-
-
     public function retrieve_events() {
 
         if (!empty($this->events)) {
@@ -100,8 +90,13 @@ class room_plan implements renderable, templatable {
         $options = [
             'start' => $this->date, 
             'end' => $this->date + 24 * 60 * 60, 
-            'instance' => $this->moduleinstance->id
         ];
+
+        // Limit standard plans to this instance
+        if ($this->moduleinstance->type == ROOM_PLAN_TYPE_STANDARD) {
+            $options['instance'] = $this->moduleinstance->id;
+        }
+
         $this->events = new \mod_room\entity\slot_collection($options);
         $this->events->prepare_display($this->modulecontext);
     }

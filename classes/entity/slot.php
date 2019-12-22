@@ -81,6 +81,11 @@ class slot {
     public $name;
 
     /**
+     * @var string qualified name including foreign context or naming after context when empty name
+     */
+    public $displayname;
+
+    /**
      * @var string location of event
      */
     public $location;
@@ -144,8 +149,31 @@ class slot {
 
     /**
      * Prepare properties for display by a template
+     * 
+     * @param \context_module $modulecontext Context this slot is to be displayed in
      */
     public function prepare_display(\context_module $modulecontext) {
+        // var_dump($modulecontext);
+        // var_dump(\context_course::instance($this->event->courseid));
+
+        $displayname = [];
+        // If the slot is being shown out of context, or has no name, 
+        // preface name with course or category name
+        $coursecontext = \context_course::instance($this->courseid);
+        if (!in_array($coursecontext->id, explode('/', $modulecontext->path)) || !$this->name) {
+            $displayname[] = $coursecontext->get_context_name(false, false);
+        }
+        // Add name if slot has a name
+        if ($this->name) {
+            $displayname[] = $this->name;
+        }
+        $this->displayname = implode(': ', $displayname);
+
+        // Set name to context name if it is empty
+        if (!$this->name) {
+            $this->name = $this->displayname;
+        }
+
         // Calculate human-readable date strings for start and end
         $this->userdatestart = userdate(
             $this->timestart, 

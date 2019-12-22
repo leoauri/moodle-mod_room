@@ -105,3 +105,7 @@ $string['spotbooked'] = 'Spot booked';
 $string['bookedby'] = 'Booked by';
 $string['cancelbooking'] = 'Cancel booking';
 $string['bookingcancelled'] = 'Booking cancelled';
+$string['plantype'] = 'Plan type';
+$string['standard'] = 'Standard';
+$string['master'] = 'Master';
+$string['masterroomplan'] = 'Master room plan';

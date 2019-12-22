@@ -50,4 +50,51 @@ class behat_mod_room extends behat_base {
             $DB->insert_record('room_space', $newroom);    
         }
     }
+
+    /**
+     * @Given /^the following slots are defined in the room module:$/
+     */
+    public function define_slots(TableNode $table) {
+        global $USER;
+        global $DB;
+        
+        foreach ($table->getHash() as $slotdata) {
+            if (empty($slotdata['roomplan'])) {
+                throw new Exception('Slots must be created in a room plan module');
+            }
+            if (empty($slotdata['room'])) {
+                throw new Exception('Slots must be created in a room');
+            }
+
+            $moduleinstance = $DB->get_record('room', ['name' => $slotdata['roomplan']], '*', MUST_EXIST);
+
+            $starttime = new DateTime($slotdata['starttime'], new DateTimeZone('UTC'));
+            // throw new Exception($starttime->getTimezone()->getName());
+            $starttime = $starttime->getTimestamp();
+            // throw new Exception($slotdata['starttime']);
+
+            $roomid = $DB->get_field_select('room_space', 'id', 'name = :name', [
+                'name' => $slotdata['room']
+            ], MUST_EXIST);
+            
+            if ($slotdata['duration']) {
+                $parts = explode(':', $slotdata['duration']);
+                $duration['hours'] = (int)$parts[0];
+                $duration['minutes'] = (int)$parts[1];
+            } else {
+                $duration = null;
+            }
+
+            $newslot = new \mod_room\entity\slot();
+            $newslot->set_slot_properties((object)[
+                'starttime' => $starttime,
+                'slottitle' => $slotdata['slottitle'],
+                'room' => $roomid,
+                'duration' => $duration,
+                'spots' => $slotdata['spots']
+            ], $moduleinstance);
+            
+            $newslot->save();
+        }
+    }
 }

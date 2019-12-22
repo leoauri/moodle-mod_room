@@ -59,6 +59,12 @@ class mod_room_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'displayname', 'mod_room');
 
+        // Room plan type selector
+        $mform->addElement('select', 'type', get_string('plantype', 'mod_room'), [
+            ROOM_PLAN_TYPE_STANDARD => get_string('standard', 'mod_room'),
+            ROOM_PLAN_TYPE_MASTER => get_string('master', 'mod_room')
+        ]);
+
         // Adding the standard "intro" and "introformat" fields.
         if ($CFG->branch >= 29) {
             $this->standard_intro_elements();

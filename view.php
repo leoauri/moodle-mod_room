@@ -77,7 +77,12 @@ if ($dateselected = $dateselector->get_data()) {
 
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(format_string($moduleinstance->name));
+$heading = format_string($moduleinstance->name);
+// Add (Master room plan) to master room plans
+if ($moduleinstance->type == ROOM_PLAN_TYPE_MASTER) {
+    $heading .= ' (' . get_string('masterroomplan', 'mod_room') . ')';
+}
+echo $OUTPUT->heading($heading);
 
 $roomplan = new room_plan($modulecontext, $moduleinstance, $date);
 
