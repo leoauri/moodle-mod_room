@@ -148,14 +148,16 @@ class slot {
     public $bookings;
 
     /**
+     * @var spot context, can be course, category, site...
+     */
+    public $context;
+
+    /**
      * Prepare properties for display by a template
      * 
      * @param \context_module $modulecontext Context this slot is to be displayed in
      */
     public function prepare_display(\context_module $modulecontext) {
-        // var_dump($modulecontext);
-        // var_dump(\context_course::instance($this->event->courseid));
-
         $displayname = [];
         // If the slot is being shown out of context, or has no name, 
         // preface name with course or category name
@@ -265,6 +267,8 @@ class slot {
         if ($slotproperties = $DB->get_record('room_slot', $params)) {
             $this->slotid = (int)$slotproperties->id;
             $this->id = (int)$slotproperties->eventid;
+
+            $this->context = (int)$slotproperties->contextid;
             
             $this->spots = $slotproperties->spots;
             $this->bookings = new booking_collection($this->slotid);
@@ -353,6 +357,10 @@ class slot {
         if (isset($data->spots)) {
             $this->spots = $data->spots;
         }
+
+        if (isset($data->context)) {
+            $this->context = $data->context;
+        }
     }
 
     private function event_properties() {
@@ -377,6 +385,7 @@ class slot {
         global $USER;
         $slotproperties = [
             'eventid' => $this->id,
+            'contextid' => $this->context,
             'spots' => $this->spots,
             'usermodified' => $USER->id,
             'timemodified' => time(),
@@ -420,6 +429,17 @@ class slot {
         return usergetmidnight($this->timestart);
     }
 
+    public function context_or_course_context() {
+        // If context is set
+        if ($this->context) {
+            return $this->context;
+        }
+        // Otherwise if course is set
+        elseif ($this->courseid) {
+            return \context_course::instance($this->courseid)->id;
+        }
+    }
+
     public function form_properties() {
         $formproperties = new \stdClass();
         if ($this->event) {
@@ -442,6 +462,9 @@ class slot {
             // Pass non-event slot properties back to form
             $formproperties->spots = $this->spots;
         }
+
+        $formproperties->context = $this->context_or_course_context();
+
         return $formproperties;
     }
 
@@ -457,6 +480,7 @@ class slot {
         
         // Clone non-event slot properties
         $this->spots = $slot->spots;
+        $this->context = $slot->context;
     }
 
     public function new_booking(int $userid) {

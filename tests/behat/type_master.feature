@@ -51,3 +51,5 @@ Feature: Master plans
     And I press "Display"
     Then "[data-event-title=\"Greatnuss\"]" "css_element" should exist
     And I should see "Oport: OOOOO"
+
+  # TODO: Test that slots in a course category are prefixed as such

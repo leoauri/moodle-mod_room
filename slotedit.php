@@ -57,16 +57,38 @@ $PAGE->set_context($modulecontext);
 
 $eventid = optional_param('eventid', 0, PARAM_INT);
 
+// Set up slot and properties for either saving the slot or passing to the form
+$slot = new \mod_room\entity\slot($eventid);
+
+// Take path of contexts from context_module
+$contexts = explode('/', $modulecontext->path);
+
+// strip off module and site context, and empty element
+$contexts = array_slice($contexts, 2, -1);
+
+// Dirty fix for master plans: add slot context if it is not present
+if ($slotcontext = $slot->context_or_course_context()) {
+    if (!in_array($slotcontext, $contexts)) {
+        $contexts[] = $slotcontext;
+    }
+}
+
+// pass in as options to the form
+$contextoptions = [];
+foreach ($contexts as $context) {
+    $contextoptions[$context] = context_helper::instance_by_id($context)->get_context_name(false);
+}    
+
 $mform = new \mod_room\form\slot_edit(
     new moodle_url(
         '/mod/room/slotedit.php', 
         array('id' => $id, 'eventid' => $eventid)
     ), 
-    ['eventid' => $eventid]
+    [
+        'eventid' => $eventid,
+        'contextoptions' => $contextoptions
+    ]
 );
-
-// Set up slot and properties for either saving the slot or passing to the form
-$slot = new \mod_room\entity\slot($eventid);
 
 if ($mform->is_cancelled()) {
     redirect(new moodle_url('/mod/room/view.php', array('id' => $id)));
@@ -90,11 +112,16 @@ if ($mform->is_cancelled()) {
 
 $formproperties = $slot->form_properties();
 
+// Set new event to start on viewed date or today at 10AM by default
 if (!isset($formproperties->starttime)) {
-    // Set new event to start on viewed date or today at midday by default
     $vieweddate = optional_param('date', 0, PARAM_INT);
-    $formproperties->starttime = usergetmidnight($vieweddate ? $vieweddate : time()) + 12 * 60 * 60;
+    $formproperties->starttime = usergetmidnight($vieweddate ? $vieweddate : time()) + 10 * 60 * 60;
 }
+// Set new slot to be in this course context
+if (!isset($formproperties->context)) {
+    $formproperties->context = context_course::instance($course->id)->id;
+}
+
 $mform->set_data($formproperties);
 
 echo $OUTPUT->header();

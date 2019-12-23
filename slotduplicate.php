@@ -65,9 +65,9 @@ if ($mform->is_cancelled()) {
         // Add 24hrs to end date to include specified day
         $data->enddate = slot_collection::modified_timestamp($data->enddate, '+1 day');
 
-        // retrieve slots in the date range for this room plan
+        // retrieve all slots in the date range
         $slots = new slot_collection(
-            ['start' => $data->startdate, 'end' => $data->enddate, 'instance' => $moduleinstance->id]
+            ['start' => $data->startdate, 'end' => $data->enddate]
         );
 
         // for each slot add one week to starttime

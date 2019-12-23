@@ -146,5 +146,30 @@ function xmldb_room_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2019120900, 'room');
     }
 
+    if ($oldversion < 2019122300) {
+
+        // Define field contextid to be added to room_slot.
+        $table = new xmldb_table('room_slot');
+        $field = new xmldb_field('contextid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'eventid');
+
+        // Conditionally launch add field contextid.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        
+        // Define key contextid (foreign) to be added to room_slot.
+        $table = new xmldb_table('room_slot');
+        $key = new xmldb_key('contextid', XMLDB_KEY_FOREIGN, ['contextid'], 'context', ['id']);
+
+        // Launch add key contextid.
+        $dbman->add_key($table, $key);
+
+
+        // Room savepoint reached.
+        upgrade_mod_savepoint(true, 2019122300, 'room');
+    }
+
+
     return true;
 }

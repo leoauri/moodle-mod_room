@@ -68,10 +68,8 @@ class behat_mod_room extends behat_base {
 
             $moduleinstance = $DB->get_record('room', ['name' => $slotdata['roomplan']], '*', MUST_EXIST);
 
-            $starttime = new DateTime($slotdata['starttime'], new DateTimeZone('UTC'));
-            // throw new Exception($starttime->getTimezone()->getName());
+            $starttime = new DateTime($slotdata['starttime']);
             $starttime = $starttime->getTimestamp();
-            // throw new Exception($slotdata['starttime']);
 
             $roomid = $DB->get_field_select('room_space', 'id', 'name = :name', [
                 'name' => $slotdata['room']
@@ -85,16 +83,45 @@ class behat_mod_room extends behat_base {
                 $duration = null;
             }
 
-            $newslot = new \mod_room\entity\slot();
-            $newslot->set_slot_properties((object)[
+            $properties = (object)[
                 'starttime' => $starttime,
                 'slottitle' => $slotdata['slottitle'],
                 'room' => $roomid,
                 'duration' => $duration,
                 'spots' => $slotdata['spots']
-            ], $moduleinstance);
+            ];
+
+            if (!empty($slotdata['context'])) {
+                $course = $DB->get_record('course', ['id' => $moduleinstance->course], '*', MUST_EXIST);
+                $cm = get_coursemodule_from_instance('room', $moduleinstance->id, $course->id, false, MUST_EXIST);
+                $modulecontext = context_module::instance($cm->id);
+
+                $possiblecontexts = array_slice(explode('/', $modulecontext->path), 1);
+
+                $test = [];
+                foreach ($possiblecontexts as $possiblecontext) {
+                    $test[] = context_helper::instance_by_id($possiblecontext)->get_context_name(false);
+                    if ($slotdata['context'] == context_helper::instance_by_id($possiblecontext)->get_context_name(false)) {
+                        $properties->context = $possiblecontext;
+                    }
+                }
+                $test[] = $slotdata['context'];
+                $test[] = $properties->context;
+            }
+
+            $newslot = new \mod_room\entity\slot();
+            $newslot->set_slot_properties($properties, $moduleinstance);
             
             $newslot->save();
         }
+    }
+
+    /**
+     * @Then dump room
+     */
+    public function dumpRoom() {
+        global $DB;
+        $dump = $DB->get_records('event');
+        throw new Exception(var_export($dump, true));
     }
 }

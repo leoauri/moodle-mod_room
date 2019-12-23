@@ -86,6 +86,7 @@ $string['roomsettings'] = 'Room settings';
 $string['slot'] = 'Slot';
 $string['spots'] = 'Spots';
 $string['slotcontext'] = 'Slot course or course category';
+$string['context'] = 'Context';
 $string['slotowner'] = 'Slot owner';
 $string['slottitle'] = 'Slot title';
 $string['starttime'] = 'Start time';

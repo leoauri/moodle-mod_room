@@ -37,13 +37,13 @@ $r  = optional_param('r', 0, PARAM_INT);
 $date = optional_param('date', 0, PARAM_INT);
 
 if ($id) {
-    $cm             = get_coursemodule_from_id('room', $id, 0, false, MUST_EXIST);
-    $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $cm = get_coursemodule_from_id('room', $id, 0, false, MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('room', array('id' => $cm->instance), '*', MUST_EXIST);
 } else if ($r) {
     $moduleinstance = $DB->get_record('room', array('id' => $n), '*', MUST_EXIST);
-    $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-    $cm             = get_coursemodule_from_instance('room', $moduleinstance->id, $course->id, false, MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
+    $cm = get_coursemodule_from_instance('room', $moduleinstance->id, $course->id, false, MUST_EXIST);
 } else {
     print_error(get_string('missingidandcmid', 'mod_room'));
 }

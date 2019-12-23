@@ -92,9 +92,12 @@ class room_plan implements renderable, templatable {
             'end' => $this->date + 24 * 60 * 60, 
         ];
 
-        // Limit standard plans to this instance
+        // Show events from context tree for standard plans
         if ($this->moduleinstance->type == ROOM_PLAN_TYPE_STANDARD) {
-            $options['instance'] = $this->moduleinstance->id;
+            $options['contextsandcourse'] = [
+                'contexts' => array_slice(explode('/', $this->modulecontext->path), 1),
+                'courseid' => $this->moduleinstance->course
+            ];
         }
 
         $this->events = new \mod_room\entity\slot_collection($options);

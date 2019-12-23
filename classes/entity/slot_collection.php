@@ -51,22 +51,31 @@ class slot_collection implements \IteratorAggregate, \Countable {
         // FIX: also return in-progress events, i.e. that start before day and haven't ended  :|
         $sql = "SELECT e.id 
             FROM {event} e
-            WHERE modulename = 'room'";
+            LEFT JOIN {room_slot} rs ON e.id = rs.eventid
+            WHERE e.modulename = 'room'";
         $searchoptions = [];
 
         if (isset($options['start'])) {
-            $sql .= ' AND timestart >= :start';
+            $sql .= ' AND e.timestart >= :start';
             $searchoptions['start'] = $options['start'];
         }
 
         if (isset($options['end'])) {
-            $sql .= ' AND timestart <= :end';
+            $sql .= ' AND e.timestart <= :end';
             $searchoptions['end'] = $options['end'];
         }
 
         if (isset($options['instance'])) {
-            $sql .= ' AND instance = :instance';
+            $sql .= ' AND e.instance = :instance';
             $searchoptions['instance'] = $options['instance'];
+        }
+
+        // Limit results to slots in the context tree or events in the course with no context set
+        if (isset($options['contextsandcourse'])) {
+            $sql .= ' AND (rs.contextid IN (' . 
+                implode(',', $options['contextsandcourse']['contexts']) . 
+                ') OR rs.contextid IS NULL AND e.courseid = :courseid)';
+            $searchoptions['courseid'] = $options['contextsandcourse']['courseid'];
         }
 
         global $DB;

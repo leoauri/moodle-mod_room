@@ -41,6 +41,13 @@ class slot_edit extends \moodleform {
 
         $mform = $this->_form;
 
+        $mform->addElement(
+            'select', 
+            'context', 
+            get_string('context', 'mod_room'), 
+            $this->_customdata['contextoptions']
+        );
+
         $mform->addElement('text', 'slottitle', get_string('slottitle', 'mod_room'));
         $mform->setType('slottitle', PARAM_TEXT);
         $mform->addRule('slottitle', null, 'required', null, 'client');
