@@ -429,6 +429,13 @@ class slot {
         }
     }
 
+    public function delete() {
+        global $DB;
+
+        $DB->delete_records('room_slot', ['id' => $this->slotid]);
+        $DB->delete_records('event', ['id' => $this->id]);
+    }
+
     public function midnight() {
         return usergetmidnight($this->timestart);
     }

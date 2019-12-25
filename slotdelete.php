@@ -44,7 +44,7 @@ $PAGE->set_heading(format_string($course->fullname));
 $modulecontext = context_module::instance($cm->id);
 $PAGE->set_context($modulecontext);
 
-$slot = calendar_event::load($eventid);
+$slot = new \mod_room\entity\slot($eventid);
 
 // Setup redirect url with id of module and time set to day of event
 $returnurl = new moodle_url('/mod/room/view.php');

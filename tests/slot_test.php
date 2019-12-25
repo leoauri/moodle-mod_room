@@ -352,4 +352,37 @@ class mod_room_slot_testcase extends advanced_testcase {
         $this->expectException('moodle_exception');
         $loadedslot->new_booking($anotheruser->id);
     }
+
+    public function test_delete() {
+        $slotsettings = (object)[
+            'courseid' => $this->course->id,
+            'instance' => $this->roomplan->id,
+            'starttime' => time(),
+            'duration' => [
+                'hours' => 1,
+                'minutes' => 0
+            ],
+            'spots' => 1,
+            'slottitle' => 'wonderful event',
+            'room' => $this->roomspace->id
+        ];
+        $slot = new slot();
+        $slot->set_slot_properties($slotsettings, $this->roomplan);
+        $slot->save();
+
+        // Test that both event and room_slot records are removed when deleting
+        $eventid = $slot->id;
+        $slotid = $slot->slotid;
+
+        $slot = new slot($eventid);
+
+        global $DB;
+        $this->assertNotFalse($DB->get_record('event', ['id' => $eventid]));
+        $this->assertNotFalse($DB->get_record('room_slot', ['id' => $slotid]));
+
+        $slot->delete();
+
+        $this->assertFalse($DB->get_record('event', ['id' => $eventid]));
+        $this->assertFalse($DB->get_record('room_slot', ['id' => $slotid]));
+    }
 }
