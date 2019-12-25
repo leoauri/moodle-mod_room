@@ -251,6 +251,44 @@ class mod_room_slot_testcase extends advanced_testcase {
         // TODO: test that no spotbooking when all spots are booked
     }
 
+    public function test_prepare_display_context_prefix() {
+        // when slot is from outside context tree, name should be prefixed with context
+        $enclosingcategory = $this->datagenerator->create_category(['name' => 'enclosing cat']);
+        $enclosedcourse1 = $this->datagenerator->create_course(['category' => $enclosingcategory->id]);
+        $enclosedcourse2 = $this->datagenerator->create_course(['category' => $enclosingcategory->id]);
+        $othercourse = $this->datagenerator->create_course();
+
+        $ec1roomplan = $this->datagenerator->create_module('room', ['course' => $enclosedcourse1->id]);
+        $ec2roomplan = $this->datagenerator->create_module('room', ['course' => $enclosedcourse2->id]);
+        $ocroomplan = $this->datagenerator->create_module('room', ['course' => $othercourse->id]);
+
+        $slotsettings = (object)[
+            'courseid' => $enclosedcourse1->id,
+            'instance' => $ec1roomplan->id,
+            'starttime' => (new DateTime('2023-07-17 18:00'))->getTimestamp(),
+            'slottitle' => 'ec1 slot',
+            'room' => $this->roomspace->id,
+            'context' => context_coursecat::instance($enclosingcategory->id)->id
+        ];
+
+        $slot = new slot();
+        $slot->set_slot_properties($slotsettings, $ec1roomplan);
+        $slot->save();
+
+        $slot = new slot($slot->id);
+        $slot->prepare_display(context_module::instance($ocroomplan->cmid));
+        $this->assertEquals('enclosing cat: ec1 slot', $slot->displayname);
+
+        // when slot is from enclosing course category, no context prefix
+        $slot = new slot($slot->id);
+        $slot->prepare_display(context_module::instance($ec1roomplan->cmid));
+        $this->assertEquals('ec1 slot', $slot->displayname);
+
+        $slot = new slot($slot->id);
+        $slot->prepare_display(context_module::instance($ec2roomplan->cmid));
+        $this->assertEquals('ec1 slot', $slot->displayname);
+    }
+
     public function test_constructor() {
         // check that constructing from slotid works and returns saved values
         $slotsettings = (object)[

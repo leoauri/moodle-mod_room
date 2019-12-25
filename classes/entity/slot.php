@@ -161,10 +161,14 @@ class slot {
         $displayname = [];
         // If the slot is being shown out of context, or has no name, 
         // preface name with course or category name
-        $coursecontext = \context_course::instance($this->courseid);
-        if (!in_array($coursecontext->id, explode('/', $modulecontext->path)) || !$this->name) {
-            $displayname[] = $coursecontext->get_context_name(false, false);
+        // If context is set, take context from it, otherwise from the event course
+        $contextinstance = $this->context ? 
+            \context_helper::instance_by_id($this->context) : 
+            \context_course::instance($this->courseid);
+        if (!in_array($contextinstance->id, explode('/', $modulecontext->path)) || !$this->name) {
+            $displayname[] = $contextinstance->get_context_name(false, false);
         }
+        
         // Add name if slot has a name
         if ($this->name) {
             $displayname[] = $this->name;
