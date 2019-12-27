@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_room';
-$plugin->release = '3.0.2';
-$plugin->version  = 2019122300;
+$plugin->release = '3.1.0';
+$plugin->version  = 2019122700;
 $plugin->requires = 2019111800;
 $plugin->maturity = MATURITY_ALPHA;

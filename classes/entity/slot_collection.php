@@ -121,11 +121,9 @@ class slot_collection implements \IteratorAggregate, \Countable {
         unset($slot);
     }
 
-    public function save_as_new() {
+    public function save_all_as_new() {
         foreach ($this->slots as $slot) {
-            $clone = new slot();
-            $clone->clone_slot($slot);
-            $clone->save();
+            $slot->save_as_new();
         }
     }
 }

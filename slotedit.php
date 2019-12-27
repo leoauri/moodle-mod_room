@@ -93,9 +93,14 @@ $mform = new \mod_room\form\slot_edit(
 if ($mform->is_cancelled()) {
     redirect(new moodle_url('/mod/room/view.php', array('id' => $id)));
 } else if ($data = $mform->get_data()) {
+    // TODO: check capability in context received context from the form, not just here
     if (confirm_sesskey() && has_capability('mod/room:editslots', context_course::instance($course->id))) {
         $slot->set_slot_properties($data, $moduleinstance);
-        $slot->save();
+        if (!empty($data->saveasnewslot)) {
+            $slot->save_as_new();
+        } else {
+            $slot->save();
+        }
 
         redirect(
             new moodle_url(

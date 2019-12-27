@@ -102,7 +102,7 @@ class mod_room_slot_testcase extends advanced_testcase {
         }
     }
 
-    public function test_save_load_clone() {
+    public function test_save_as_new_properties() {
         $slotsettings = (object)[
             'courseid' => $this->course->id,
             'instance' => $this->roomplan->id,
@@ -117,16 +117,20 @@ class mod_room_slot_testcase extends advanced_testcase {
         ];
         $originalslot = new slot();
         $originalslot->set_slot_properties($slotsettings, $this->roomplan);
-
         $originalslot->save();
 
         $loadedslot = new slot($originalslot->id);
 
         $this->assertSlotsPropertiesEqual($originalslot, $loadedslot);
+        $this->assertEquals($originalslot->id, $loadedslot->id);
+        $this->assertEquals($originalslot->slotid, $loadedslot->slotid);
 
-        $clonedslot = new slot();
-        $clonedslot->clone_slot($originalslot);
+        $clonedslot = clone $loadedslot;
+        $clonedslot->save_as_new();
+
         $this->assertSlotsPropertiesEqual($loadedslot, $clonedslot);
+        $this->assertNotEquals($loadedslot->id, $clonedslot->id);
+        $this->assertNotEquals($loadedslot->slotid, $clonedslot->slotid);
     }
 
     public function test_prepare_display_id_mismatch() {

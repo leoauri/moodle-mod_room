@@ -97,8 +97,23 @@ class slot_edit extends \moodleform {
         $grouprules['minutes'] = [[null, 'numeric', null, 'client']];
         $mform->addGroupRule('duration', $grouprules);
 
-        $confirmmessage = $this->_customdata['eventid'] ? 'updateslot' : 'addslot';
-
-        $this->add_action_buttons(true, get_string($confirmmessage, 'mod_room'));
+        if ($this->_customdata['eventid']) {
+            $submitarray = [];
+            $submitarray[] = &$mform->createElement(
+                'submit', 
+                'submitbutton', 
+                get_string('updateslot', 'mod_room')
+            );
+            $submitarray[] = &$mform->createElement(
+                'submit', 
+                'saveasnewslot', 
+                get_string('saveasnewslot', 'mod_room')
+            );
+            $submitarray[] = &$mform->createElement('cancel');
+            $mform->addGroup($submitarray, 'buttonar', '', array(' '), false);
+            $mform->closeHeaderBefore('buttonar');
+        } else {
+            $this->add_action_buttons(true, get_string('addslot', 'mod_room'));
+        }
     }
 }

@@ -429,6 +429,15 @@ class slot {
         }
     }
 
+    public function save_as_new() {
+        $this->event = null;
+        $this->id = null;
+        $this->slotid = null;
+        $this->bookings = null;
+
+        $this->save();
+    }
+
     public function delete() {
         global $DB;
 
@@ -477,21 +486,6 @@ class slot {
         $formproperties->context = $this->context_or_course_context();
 
         return $formproperties;
-    }
-
-    public function clone_slot($slot) {
-        $this->courseid = $slot->courseid;
-        $this->instance = $slot->instance;
-        
-        $this->timestart = $slot->timestart;
-        $this->timeduration = $slot->timeduration;
-        $this->name = $slot->name;
-        
-        $this->location = $slot->location;
-        
-        // Clone non-event slot properties
-        $this->spots = $slot->spots;
-        $this->context = $slot->context;
     }
 
     public function new_booking(int $userid) {

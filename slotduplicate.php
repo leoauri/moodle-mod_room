@@ -74,7 +74,7 @@ if ($mform->is_cancelled()) {
         $slots->modify_starttimes('+1 week');
 
         // save each slot as new slot
-        $slots->save_as_new();
+        $slots->save_all_as_new();
 
         redirect(
             new moodle_url(

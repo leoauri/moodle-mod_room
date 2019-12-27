@@ -98,15 +98,14 @@ class behat_mod_room extends behat_base {
 
                 $possiblecontexts = array_slice(explode('/', $modulecontext->path), 1);
 
-                $test = [];
                 foreach ($possiblecontexts as $possiblecontext) {
-                    $test[] = context_helper::instance_by_id($possiblecontext)->get_context_name(false);
                     if ($slotdata['context'] == context_helper::instance_by_id($possiblecontext)->get_context_name(false)) {
                         $properties->context = $possiblecontext;
                     }
                 }
-                $test[] = $slotdata['context'];
-                $test[] = $properties->context;
+                if (!isset($properties->context)) {
+                    throw new Exception('Specified slot context not found');
+                }
             }
 
             $newslot = new \mod_room\entity\slot();
