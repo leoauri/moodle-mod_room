@@ -143,13 +143,6 @@ function room_extend_settings_navigation(settings_navigation $settingsnav, navig
         $label = get_string('roomadministration', 'mod_room');
         $roomnode->add($label, $url);
     }
-
-    if (has_capability('mod/room:editslots', $context)) {
-        $roomnode->add(
-            get_string('slotduplicationtool', 'mod_room'), 
-            new moodle_url('slotduplicate.php', ['id' => $cm->id])
-        );
-    }
 }
 
 /**

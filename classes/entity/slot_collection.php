@@ -44,7 +44,7 @@ class slot_collection implements \IteratorAggregate, \Countable {
     public function __construct(array $options) {
         // Convert any DateTime objects to timestamps
         foreach (['start', 'end'] as $timeoption) {
-            if ($options[$timeoption] instanceof \DateTime) {
+            if (isset($options[$timeoption]) && $options[$timeoption] instanceof \DateTime) {
                 $options[$timeoption] = $options[$timeoption]->getTimestamp();
             }
         }
