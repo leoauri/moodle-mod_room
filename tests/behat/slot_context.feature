@@ -27,8 +27,8 @@ Feature: Slot context
     And the following rooms are defined in the room module:
       | roomname |
       | Room     |
-
-  Scenario: Duplicate slots with context
+  
+  Scenario: Save slots with context as new
     Given the following slots are defined in the room module:
       | roomplan  | slottitle     | room | starttime        | duration | spots | context      |
       | singplan  | theorylesson  | Room | 2022-01-01 23:30 | 2:00     | 1     | music        |
@@ -51,42 +51,21 @@ Feature: Slot context
       | displaydate[year]  | 2022    |
     And I press "Display"
     Then I should see "theorylesson"
-    When I navigate to "Slot duplication tool" in current page administration
+    When I click on "[data-event-title=\"theorylesson\"] [data-action=\"edit\"]" "css_element"
     And I set the following fields to these values:
-      | startdate[day]   | 1       |
-      | startdate[month] | January |
-      | startdate[year]  | 2022    |
-      | enddate[day]     | 2       |
-      | enddate[month]   | January |
-      | enddate[year]    | 2022    |
-    And I press "Duplicate"
+      | starttime[hour] | 13 |
+      | starttime[day] | 3 |
+    And I press "Save as new slot"
     Then I should see "theorylesson"
-    And I should see "Saturday, 8 January 2022, 11:30 PM » Sunday, 9 January 2022, 1:30 AM"
+    And I should see "3 January 2022, 1:30 PM » 3:30 PM"
     When I am on "Diplom 1" course homepage
     And I follow "diplomplan"
     And I set the following fields to these values:
-      | displaydate[day]   | 8       |
+      | displaydate[day]   | 3       |
       | displaydate[month] | January |
       | displaydate[year]  | 2022    |
     And I press "Display"
     Then I should see "theorylesson"
-    And I should see "Saturday, 8 January 2022, 11:30 PM » Sunday, 9 January 2022, 1:30 AM"
-    When I am on "singing" course homepage
-    And I follow "singplan"
-    And I set the following fields to these values:
-      | displaydate[day]   | 2       |
-      | displaydate[month] | January |
-      | displaydate[year]  | 2022    |
-    And I press "Display"
-    Then I should see "play together"
-    And I should see "Free spots: 5"
-    When I set the following fields to these values:
-      | displaydate[day]   | 9       |
-      | displaydate[month] | January |
-      | displaydate[year]  | 2022    |
-    And I press "Display"
-    Then I should see "play together"
-    And I should see "Free spots: 5"
 
   Scenario: View slot from various courses in a category
     And I log in as "admin"

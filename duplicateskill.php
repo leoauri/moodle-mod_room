@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display information about all the mod_room modules in the requested course.
+ * Tool to for killing falsely duplicated slots.
  *
  * @package     mod_room
  * @copyright   2019 Leo Auri <code@leoauri.com>
