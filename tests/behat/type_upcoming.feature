@@ -19,8 +19,8 @@ Feature: Upcoming slots plans
       | Big            |
     And the following slots are defined in the room module:
       | roomplan   | slottitle | room   | starttime        | duration | spots |
-      | greek plan | upcoming1 | Big    | 2030-01-01 16:00 |          |       |
       | greek plan | upcoming2 | Big    | 2030-01-02 16:00 | 1:00     | 4     |
+      | greek plan | upcoming1 | Big    | 2030-01-01 16:00 |          |       |
       | greek plan | upcoming3 | Big    | 2035-01-01 11:00 | 2:30     | 1     |
       | greek plan | upcoming4 | A Room | 2036-01-01 16:00 |          |       |
       | tildeplan  | upcoming5 | A Room | 2036-01-01 16:00 |          |       |
@@ -37,3 +37,4 @@ Feature: Upcoming slots plans
     And I should see "upcoming3"
     And I should see "upcoming4"
     And I should not see "upcoming5"
+    And "upcoming1" "text" should appear before "upcoming2" "text"

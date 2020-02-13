@@ -78,6 +78,9 @@ class slot_collection implements \IteratorAggregate, \Countable {
             $searchoptions['courseid'] = $options['contextsandcourse']['courseid'];
         }
 
+        // Order by start time
+        $sql .= ' ORDER BY e.timestart';
+
         global $DB;
 
         // TODO: make this an array of slot objects
