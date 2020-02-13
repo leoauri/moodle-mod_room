@@ -62,7 +62,8 @@ class mod_room_mod_form extends moodleform_mod {
         // Room plan type selector
         $mform->addElement('select', 'type', get_string('plantype', 'mod_room'), [
             ROOM_PLAN_TYPE_STANDARD => get_string('standard', 'mod_room'),
-            ROOM_PLAN_TYPE_MASTER => get_string('master', 'mod_room')
+            ROOM_PLAN_TYPE_MASTER => get_string('master', 'mod_room'),
+            ROOM_PLAN_TYPE_UPCOMING => get_string('upcoming', 'mod_room')
         ]);
 
         // Adding the standard "intro" and "introformat" fields.

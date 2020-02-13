@@ -111,3 +111,5 @@ $string['plantype'] = 'Plan type';
 $string['standard'] = 'Standard';
 $string['master'] = 'Master';
 $string['masterroomplan'] = 'Master room plan';
+$string['upcoming'] = 'Upcoming';
+$string['upcomingslots'] = 'Upcoming slots';

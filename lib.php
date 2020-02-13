@@ -28,6 +28,7 @@ define('ROOM_EVENT_TYPE_SLOT', 'slot');
 
 define('ROOM_PLAN_TYPE_STANDARD', 0);
 define('ROOM_PLAN_TYPE_MASTER', 1);
+define('ROOM_PLAN_TYPE_UPCOMING', 2);
 
 /**
  * Return if the plugin supports $feature.

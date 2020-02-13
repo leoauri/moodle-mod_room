@@ -87,13 +87,18 @@ class room_plan implements renderable, templatable {
             return;
         }
 
-        $options = [
-            'start' => $this->date, 
-            'end' => $this->date + 24 * 60 * 60, 
-        ];
+        $options = ['start' => $this->date];
 
-        // Show events from context tree for standard plans
-        if ($this->moduleinstance->type == ROOM_PLAN_TYPE_STANDARD) {
+        // limit to the day unless upcoming plan
+        if ($this->moduleinstance->type != ROOM_PLAN_TYPE_UPCOMING) {
+            $options['end'] = $this->date + 24 * 60 * 60;
+        }
+
+        // Show events from context tree for standard and upcoming plans
+        if (
+                $this->moduleinstance->type == ROOM_PLAN_TYPE_STANDARD || 
+                $this->moduleinstance->type == ROOM_PLAN_TYPE_UPCOMING
+            ) {
             $options['contextsandcourse'] = [
                 'contexts' => array_slice(explode('/', $this->modulecontext->path), 1),
                 'courseid' => $this->moduleinstance->course
