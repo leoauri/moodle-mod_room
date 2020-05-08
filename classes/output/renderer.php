@@ -36,4 +36,8 @@ class renderer extends plugin_renderer_base {
     protected function render_room_list(room_list $room_list) {
         return $this->render_from_template('mod_room/room_list', $room_list->export_for_template($this));
     }
+
+    protected function render_visual_plan(visual_plan $visual_plan) {
+        return $this->render_from_template('mod_room/visual_plan', $visual_plan->export_for_template($this));
+    }
 }

@@ -1,0 +1,73 @@
+// Colour definitions
+$color-white: #ffffff;
+$color-platinum: #e3e3e3;
+$color-aquamarine: #7ef8e1;
+$color-turquoise-bright: #02e4f0;
+$color-blue-cornflower-pale: #aed1ff;
+$color-gray-pastel: #cecece;
+$color-blue-midnight-dark: #03395d;
+$color-black-warm: #004335;
+$color-onyx: #353736;
+
+$grid-row-height: 40px;
+$time-column-width: 60px;
+$grid-column-width: 150px;  
+#mod-room-visual-plan {
+    position: relative;
+    * {
+        box-sizing: border-box;
+    }
+    tr {
+        height: $grid-row-height;
+    }
+    #mod-room-visual-plan-grid {
+        td, th {
+            border: solid #e3e3e3 1px;
+        }
+        .mod-room-hour-of-day {
+            text-align: right;
+            vertical-align: top;
+            padding-right: 3px;
+        }
+        .mod-room-location-header {
+            text-align: center;
+        }
+        .mod-room-grid-column {
+            width: $grid-column-width;
+        }
+        .mod-room-grid-column.mod-room-grid-column-time {
+            width: $time-column-width;
+        }
+    }
+
+    #mod-room-visual-plan-events-holder {
+        position: absolute;
+        top: $grid-row-height;
+        left: $time-column-width;
+        right: 0;
+        z-index: 1;
+        display: flex;
+
+        > div {
+            width: $grid-column-width;
+            height: $grid-row-height * 24;
+            overflow: hidden;
+            position: relative;
+            a {
+                $link-color: $color-blue-midnight-dark;
+                color: $link-color;
+                font-size: .75em;
+                background-color: rgba($color-turquoise-bright, 0.7);
+                border: solid 1px $color-gray-pastel;
+                padding: 1px;
+                display: block;
+                position: absolute;
+                left: 1px;
+                right: 1px;
+                &:hover {
+                    color: $link-color;
+                }
+            }
+        }
+    }
+}

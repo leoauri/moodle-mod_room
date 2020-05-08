@@ -76,7 +76,11 @@ if ($moduleinstance->type == ROOM_PLAN_TYPE_UPCOMING) {
     echo $OUTPUT->heading(get_string('upcomingslots', 'mod_room') . ':', 3);
 }
 
-$roomplan = new room_plan($modulecontext, $moduleinstance, $date);
+if ($moduleinstance->type == ROOM_PLAN_TYPE_MASTER) {
+    $roomplan = new mod_room\output\visual_plan($modulecontext, $moduleinstance, $date);
+} else {
+    $roomplan = new room_plan($modulecontext, $moduleinstance, $date);
+}
 
 // Remove date selector from upcoming slots
 if ($moduleinstance->type != ROOM_PLAN_TYPE_UPCOMING) {

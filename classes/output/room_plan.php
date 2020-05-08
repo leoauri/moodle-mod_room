@@ -32,8 +32,6 @@ use renderable;
 use renderer_base;
 use templatable;
 
-// use \core_calendar\local\api as calendar_api;
-
 /**
  * Room plan renderable.
  *
@@ -41,46 +39,7 @@ use templatable;
  * @copyright  2019 Leo Auri <code@leoauri.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class room_plan implements renderable, templatable {
-    /**
-     * @var \context_module
-     */
-    public $modulecontext;
-
-    /**
-     * @var \stdClass module instance
-     */
-    protected $moduleinstance;
-
-    /**
-     * @var int date to render
-     */
-    public $date;
-
-    /**
-     * @var array of events to render
-     */
-    protected $events;
-
-    public function __construct($modulecontext, $moduleinstance, $date) {
-        $this->modulecontext = $modulecontext;
-        $this->moduleinstance = $moduleinstance;
-        $this->date = $date ? $date : usergetmidnight(time());
-    }
-
-    
-
-    public function edit_slot_button() {
-        if (has_capability('mod/room:editslots', $this->modulecontext)) {
-            $url = new moodle_url(
-                '/mod/room/slotedit.php', 
-                array('id' => $this->modulecontext->instanceid, 'date' => $this->date));
-            $label = get_string('addslot', 'mod_room');
-            return html_writer::div(html_writer::link(
-                $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-slot-add m-t-1');
-        }
-    }
-
+class room_plan extends plan_base {
     public function retrieve_events() {
 
         if (!empty($this->events)) {

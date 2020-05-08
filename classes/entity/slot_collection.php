@@ -129,4 +129,22 @@ class slot_collection implements \IteratorAggregate, \Countable {
             $slot->save_as_new();
         }
     }
+
+    public function get_used_locations() {
+        $locations = [];
+        foreach ($this->slots as $slot) {
+            array_push($locations, $slot->location);
+        }
+        return array_unique($locations);
+    }
+
+    public function slots_for_location($location) {
+        $returnslots = [];
+        foreach ($this->slots as $slot) {
+            if ($slot->location == $location) {
+                array_push($returnslots, $slot);
+            }
+        }
+        return $returnslots;
+    }
 }

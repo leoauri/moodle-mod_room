@@ -1,0 +1,68 @@
+#mod-room-visual-plan {
+  position: relative;
+}
+
+#mod-room-visual-plan * {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+#mod-room-visual-plan tr {
+  height: 40px;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-grid td, #mod-room-visual-plan #mod-room-visual-plan-grid th {
+  border: solid #e3e3e3 1px;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-grid .mod-room-hour-of-day {
+  text-align: right;
+  vertical-align: top;
+  padding-right: 3px;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-grid .mod-room-location-header {
+  text-align: center;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-grid .mod-room-grid-column {
+  width: 150px;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-grid .mod-room-grid-column.mod-room-grid-column-time {
+  width: 60px;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-events-holder {
+  position: absolute;
+  top: 40px;
+  left: 60px;
+  right: 0;
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-events-holder > div {
+  width: 150px;
+  height: 960px;
+  overflow: hidden;
+  position: relative;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-events-holder > div a {
+  color: #03395d;
+  font-size: .75em;
+  background-color: rgba(2, 228, 240, 0.7);
+  border: solid 1px #cecece;
+  padding: 1px;
+  display: block;
+  position: absolute;
+  left: 1px;
+  right: 1px;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-events-holder > div a:hover {
+  color: #03395d;
+}

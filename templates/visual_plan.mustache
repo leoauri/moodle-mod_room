@@ -1,0 +1,57 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_room/visual_plan
+
+    This template renders a visual room plan.
+
+}}
+
+<div id="mod-room-visual-plan">
+<table id="mod-room-visual-plan-grid">
+{{! Column-wise styling }}
+<colgroup>
+<col class="mod-room-grid-column mod-room-grid-column-time">
+{{#slots_by_location}} <col class="mod-room-grid-column mod-room-grid-column-location"> {{/slots_by_location}}
+</colgroup>
+
+<tr><th></th>{{#slots_by_location}}<th class="mod-room-location-header">{{location}}</th>{{/slots_by_location}}</tr>
+
+{{! Row for each hour of the day }}
+{{#hours_of_day}}
+<tr><td class="mod-room-hour-of-day">{{{.}}}</td> 
+
+{{! As many empty cells as slots_by_location }}
+{{#slots_by_location}} <td></td> {{/slots_by_location}}
+</tr>
+{{/hours_of_day}}
+</table>
+
+{{! Container for events }}
+<div id="mod-room-visual-plan-events-holder">
+{{#slots_by_location}} <div>
+{{#slots}}
+    <a{{#canedit}} 
+    href="{{{editurl}}}"{{/canedit}} 
+    style="top: {{visualPlanTop}}px; height: {{visualPlanHeight}}px"
+    data-event-title="{{name}}">
+        {{displayname}}
+    </a>
+{{/slots}}
+</div> {{/slots_by_location}}
+</div>
+</div>
