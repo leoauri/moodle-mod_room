@@ -32,6 +32,9 @@ use mod_room\form\date_selector;
 $id = required_param('id', PARAM_INT);
 
 $date = optional_param('date', 0, PARAM_INT);
+if (empty($date)) {
+    $date = usergetmidnight(time());
+}
 
 $cm = get_coursemodule_from_id('room', $id, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -54,11 +57,7 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
-if ($date) {
-    $dateselector = new date_selector(new moodle_url('/mod/room/view.php', array('id' => $id)), ['date' => $date]);
-} else {
-    $dateselector = new date_selector(new moodle_url('/mod/room/view.php', array('id' => $id)));
-}
+$dateselector = new date_selector(new moodle_url('/mod/room/view.php', array('id' => $id)), ['date' => $date]);
 
 if ($dateselected = $dateselector->get_data()) {
     redirect(new moodle_url('/mod/room/view.php', array('id' => $cm->id, 'date' => $dateselected->displaydate)));
