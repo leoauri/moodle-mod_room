@@ -4,7 +4,7 @@ Feature: Master plans
   As a manager of my institution
   I want to see all the slots taking place in the institution
 
-  Scenario: View all slots
+  Background:
     Given the following "courses" exist:
       | fullname   | shortname |
       | greek      | gk        |
@@ -36,6 +36,8 @@ Feature: Master plans
       | Display name | Master Plan |
       | Plan type    | Master      |
     When I follow "Master Plan"
+
+  Scenario: View all slots
     Then I should see "Master room plan"
     When I set the following fields to these values:
       | displaydate[day]   | 27       |
@@ -53,3 +55,15 @@ Feature: Master plans
     And I should see "Oport: OOOOO"
 
   # TODO: Test that slots in a course category are prefixed as such
+
+  Scenario: Delete a slot via the slotedit page
+    Given I set the following fields to these values:
+      | displaydate[day]   | 27       |
+      | displaydate[month] | February |
+      | displaydate[year]  | 2019     |
+    And I press "Display"
+    And I click on "[data-event-title=\"greek class\"][data-action=\"edit\"]" "css_element"
+    When I press "Delete slot"
+    And I press "Confirm delete"
+    Then I should not see "greek: greek class"
+    And I should see "tilde: use tilde"

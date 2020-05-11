@@ -152,6 +152,16 @@ class slot {
      */
     public $context;
 
+    public function get_deleteurl($modulecontext) {
+        return new \moodle_url(
+            '/mod/room/slotdelete.php', 
+            [
+                'eventid' => $this->id,
+                'id' => $modulecontext->instanceid
+            ]
+        );
+}
+
     /**
      * Prepare properties for display by a template
      * 
@@ -201,13 +211,7 @@ class slot {
         // Pass edit and delete actions if user is capable
         $this->canedit = has_capability('mod/room:editslots', $modulecontext);
         if ($this->canedit) {
-            $this->deleteurl = new \moodle_url(
-                '/mod/room/slotdelete.php', 
-                [
-                    'eventid' => $this->id,
-                    'id' => $modulecontext->instanceid
-                ]
-            );
+            $this->deleteurl = $this->get_deleteurl($modulecontext);
             $this->editurl = new \moodle_url(
                 '/mod/room/slotedit.php',
                 [

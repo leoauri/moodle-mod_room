@@ -98,6 +98,8 @@ if ($mform->is_cancelled()) {
         $slot->set_slot_properties($data, $moduleinstance);
         if (!empty($data->saveasnewslot)) {
             $slot->save_as_new();
+        } elseif (!empty($data->deleteslot)) {
+            redirect($slot->get_deleteurl($modulecontext));
         } else {
             $slot->save();
         }

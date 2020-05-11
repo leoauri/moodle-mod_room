@@ -46,7 +46,8 @@
 {{#slots_by_location}} <div>
 {{#slots}}
     <a{{#canedit}} 
-    href="{{{editurl}}}"{{/canedit}} 
+    href="{{{editurl}}}"
+    data-action="edit"{{/canedit}} 
     style="top: {{visualPlanTop}}px; height: {{visualPlanHeight}}px"
     data-event-title="{{name}}">
         {{displayname}}
