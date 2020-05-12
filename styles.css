@@ -7,8 +7,17 @@
           box-sizing: border-box;
 }
 
-#mod-room-visual-plan tr {
+#mod-room-visual-plan #mod-room-visual-plan-grid {
+  table-layout: fixed;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-grid tr {
   height: 40px;
+}
+
+#mod-room-visual-plan #mod-room-visual-plan-grid tr.mod-room-location-header-row {
+  height: 60px;
+  background-color: rgba(126, 248, 225, 0.2);
 }
 
 #mod-room-visual-plan #mod-room-visual-plan-grid td, #mod-room-visual-plan #mod-room-visual-plan-grid th {
@@ -27,15 +36,17 @@
 
 #mod-room-visual-plan #mod-room-visual-plan-grid .mod-room-grid-column {
   width: 150px;
+  min-width: 150px;
 }
 
 #mod-room-visual-plan #mod-room-visual-plan-grid .mod-room-grid-column.mod-room-grid-column-time {
   width: 60px;
+  min-width: 60px;
 }
 
 #mod-room-visual-plan #mod-room-visual-plan-events-holder {
   position: absolute;
-  top: 40px;
+  top: 60px;
   left: 60px;
   right: 0;
   z-index: 1;
@@ -46,6 +57,7 @@
 
 #mod-room-visual-plan #mod-room-visual-plan-events-holder > div {
   width: 150px;
+  min-width: 150px;
   height: 960px;
   overflow: hidden;
   position: relative;
@@ -54,7 +66,7 @@
 #mod-room-visual-plan #mod-room-visual-plan-events-holder > div a {
   color: #03395d;
   font-size: .75em;
-  background-color: rgba(2, 228, 240, 0.7);
+  background-color: rgba(2, 228, 240, 0.45);
   border: solid 1px #cecece;
   padding: 1px;
   display: block;
