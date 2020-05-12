@@ -35,5 +35,25 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_room_generator extends testing_module_generator {
-    
+    public function create_instance($record = null, array $options = null) {
+        global $CFG;
+        require_once($CFG->dirroot.'/mod/room/lib.php');
+        $record = (object)(array)$record;
+
+        switch ($record->type) {
+            case 'upcoming':
+                $record->type = ROOM_PLAN_TYPE_UPCOMING;
+                break;
+            
+            case 'master':
+                $record->type = ROOM_PLAN_TYPE_MASTER;
+                break;
+            
+            default:
+                $record->type = ROOM_PLAN_TYPE_STANDARD;
+                break;
+        }
+
+        return parent::create_instance($record, (array)$options);
+    }
 }
