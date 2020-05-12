@@ -123,4 +123,22 @@ class behat_mod_room extends behat_base {
         $dump = $DB->get_records('event');
         throw new Exception(var_export($dump, true));
     }
+
+    /**
+     * @Given /^I view "(?P<idnumber_string>(?:[^"]|\\")*)" room module for date "(?P<date_string>(?:[^"]|\\")*)"$/
+     */
+    public function i_view_room_module_for_date($idnumber, $date) {
+        global $DB;
+        try {
+            $id = $DB->get_field('course_modules', 'id', array('idnumber' => $idnumber), MUST_EXIST);
+        } catch (dml_missing_record_exception $ex) {
+            throw new Behat\Mink\Exception\ExpectationException(sprintf("No room activity found with idnumber '%s'", $idnumber), $this->getSession());
+        }
+
+        $date = (new \DateTime($date))->getTimestamp();
+
+        $url = new \moodle_url('/mod/room/view.php', ['id' => $id, 'date' => $date]);
+
+        $this->getSession()->visit($url->out(false));
+    }
 }

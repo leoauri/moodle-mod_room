@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * File containing tests for slot collection.
+ * File containing tests for slot.
  *
  * @package     mod_room
  * @category    test
@@ -26,6 +26,7 @@
 use mod_room\entity\slot;
 
 defined('MOODLE_INTERNAL') || die();
+require_once('mod_room_test_base.php');
 
 /**
  * The slot test class.
@@ -34,27 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2019 Leo Auri <code@leoauri.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_room_slot_testcase extends advanced_testcase {
-    private $course;
-    private $roomplan;
-    private $roomspace;
-    private $datagenerator;
-
-    protected function setup() {
-        $this->resetAfterTest();
-        $this->setAdminUser();
-        $this->datagenerator = $this->getDataGenerator();
-        $this->course = $this->datagenerator->create_course();
-        $this->roomplan = $this->datagenerator->create_module('room', ['course' => $this->course->id]);
-
-        // Set up space
-        $this->roomspace = new stdClass();
-        $this->roomspace->name = 'Test room';
-
-        global $DB;
-        $this->roomspace->id = $DB->insert_record('room_space', $this->roomspace);
-    }
-
+class mod_room_slot_testcase extends mod_room_test_base {
     /**
      * Old records have an event but no room_slot record. We create a new room_slot record 
      * when saving the slot
@@ -388,5 +369,31 @@ class mod_room_slot_testcase extends advanced_testcase {
 
         $this->assertFalse($DB->get_record('event', ['id' => $eventid]));
         $this->assertFalse($DB->get_record('room_slot', ['id' => $slotid]));
+    }
+
+    public function test_modify_starttime() {
+        $slotsettings = (object)[
+            'courseid' => $this->course->id,
+            'instance' => $this->roomplan->id,
+            'starttime' => 1593561600,
+            'duration' => [
+                'hours' => 1,
+                'minutes' => 0
+            ],
+            'spots' => 1,
+            'slottitle' => 'wonderful event',
+            'room' => $this->roomspace->id
+        ];
+        $slot = new slot();
+        $slot->set_slot_properties($slotsettings, $this->roomplan);
+
+        $slot->modify_starttime('+60 seconds');
+        $this->assertEquals(1593561660, $slot->timestart);
+
+        $slot->modify_starttime('+4 hours');
+        $this->assertEquals(1593576060, $slot->timestart);
+
+        $slot->modify_starttime('+1 day');
+        $this->assertEquals(1593662460, $slot->timestart);
     }
 }

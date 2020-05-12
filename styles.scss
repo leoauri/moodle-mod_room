@@ -82,3 +82,16 @@ $grid-column-width: 150px;
         }
     }
 }
+
+#mod-room-duplication-preview {
+    table {
+        margin: 0 -5px;
+    }
+    td {
+        padding: 0 5px;
+    }
+}
+
+.mod-room-slot-info {
+    margin-bottom: 1rem;
+}

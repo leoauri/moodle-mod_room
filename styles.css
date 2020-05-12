@@ -78,3 +78,15 @@
 #mod-room-visual-plan #mod-room-visual-plan-events-holder > div a:hover {
   color: #03395d;
 }
+
+#mod-room-duplication-preview table {
+  margin: 0 -5px;
+}
+
+#mod-room-duplication-preview td {
+  padding: 0 5px;
+}
+
+.mod-room-slot-info {
+  margin-bottom: 1rem;
+}

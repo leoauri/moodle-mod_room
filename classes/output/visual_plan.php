@@ -33,7 +33,7 @@ class visual_plan extends plan_base {
         $options = ['start' => $this->date];
         $options['end'] = \mod_room\helper\date::one_day_later($this->date);
 
-        $this->events = new \mod_room\entity\slot_collection($options);
+        $this->events = \mod_room\entity\slot_collection::retrieve($options);
         $this->events->prepare_display($this->modulecontext);
     }
 

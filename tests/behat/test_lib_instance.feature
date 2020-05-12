@@ -15,3 +15,15 @@ Feature: Create instances of types
     And I am on "Course 1" course homepage
     When I follow "Room Plan"
     Then I should see "Master room plan"
+
+  Scenario: Create standard type room module by default
+    Given the following "courses" exist:
+      | fullname | shortname | format |
+      | Course 1 | C1        | topics |
+    And the following "activities" exist:
+      | activity | name      | course | idnumber |
+      | room     | Room Plan | C1     | roomplan |
+    And I log in as "admin"
+    And I am on "Course 1" course homepage
+    When I follow "Room Plan"
+    Then "[name=\"displaydate[day]\"]" "css_element" should exist

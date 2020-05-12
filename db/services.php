@@ -15,16 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Mobile addons are declared here.
+ * Web service specification.
  *
  * @package     mod_room
- * @copyright   2019 Leo Auri <code@leoauri.com>
+ * @category    upgrade
+ * @copyright   2020 Leo Auri <code@leoauri.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$addons = array(
-
-    'mod_test' => array(),
-);
+$functions = [
+    'mod_room_duplication_preview' => [
+        'classname' => 'mod_room\\external\\mod_room_duplication_preview',
+        'methodname' => 'mod_room_duplication_preview',
+        'description' => 'Fetch a preview of slots that a given duplication operation should generate.',
+        'type' => 'read',
+        'ajax' => true,
+    ]
+];

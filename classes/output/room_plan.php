@@ -68,7 +68,7 @@ class room_plan extends plan_base {
             'courseid' => $this->moduleinstance->course
         ];
 
-        $this->events = new \mod_room\entity\slot_collection($options);
+        $this->events = \mod_room\entity\slot_collection::retrieve($options);
         $this->events->prepare_display($this->modulecontext);
     }
 

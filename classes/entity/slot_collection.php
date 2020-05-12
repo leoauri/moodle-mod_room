@@ -41,7 +41,11 @@ class slot_collection implements \IteratorAggregate, \Countable {
      */
     protected $slots;
 
-    public function __construct(array $options) {
+    public function __construct(array $slots = []) {
+        $this->slots = $slots;
+    }
+
+    public static function retrieve(array $options) {
         // Convert any DateTime objects to timestamps
         foreach (['start', 'end'] as $timeoption) {
             if (isset($options[$timeoption]) && $options[$timeoption] instanceof \DateTime) {
@@ -85,10 +89,30 @@ class slot_collection implements \IteratorAggregate, \Countable {
 
         // TODO: make this an array of slot objects
         $results = array_values($DB->get_records_sql($sql, $searchoptions));
-        $this->slots = [];
+        $slots = [];
         foreach ($results as $result) {
-            $this->slots[] = new slot((int)$result->id);
+            $slots[] = new slot((int)$result->id);
         }
+
+        return new slot_collection($slots);
+    }
+
+    public static function duplicates_consecutive(slot $origslot, int $n_duplicates) {
+        if ($n_duplicates < 1) {
+            return new slot_collection();
+        }
+
+        $duplicateslots = [];
+        for ($i = 0; $i < $n_duplicates; $i++) {
+            $newslot = clone $origslot;
+
+            $timemodifier = ($i + 1) * $origslot->timeduration;
+            $newslot->modify_starttime("+$timemodifier seconds");
+            
+            $duplicateslots[] = $newslot;
+        }
+
+        return new slot_collection($duplicateslots);
     }
 
     public function prepare_display(\context_module $modulecontext) {
@@ -106,22 +130,6 @@ class slot_collection implements \IteratorAggregate, \Countable {
 
     public function count() {
         return count($this->slots);
-    }
-
-    public static function modified_timestamp(int $timestamp, string $modifier) {
-        // convert to DateTime object
-        $timestamp = new \DateTime('@' . $timestamp);
-        // apply the modifier to the slot
-        $timestamp->modify($modifier);
-        // convert back to timestamp
-        return $timestamp->getTimestamp();
-    }
-
-    public function modify_starttimes($modifier) {
-        foreach ($this->slots as &$slot) {
-            $slot->timestart = $this::modified_timestamp($slot->timestart, $modifier);
-        }
-        unset($slot);
     }
 
     public function save_all_as_new() {

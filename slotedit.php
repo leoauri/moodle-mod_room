@@ -28,22 +28,11 @@ require_once($CFG->dirroot.'/calendar/lib.php');
 
 
 // Course_module ID, or
-$id = optional_param('id', 0, PARAM_INT);
+$id = required_param('id',PARAM_INT);
 
-// ... module instance id.
-$r  = optional_param('r', 0, PARAM_INT);
-
-if ($id) {
-    $cm             = get_coursemodule_from_id('room', $id, 0, false, MUST_EXIST);
-    $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $moduleinstance = $DB->get_record('room', array('id' => $cm->instance), '*', MUST_EXIST);
-} else if ($r) {
-    $moduleinstance = $DB->get_record('room', array('id' => $n), '*', MUST_EXIST);
-    $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-    $cm             = get_coursemodule_from_instance('room', $moduleinstance->id, $course->id, false, MUST_EXIST);
-} else {
-    print_error(get_string('missingidandcmid', 'mod_room'));
-}
+$cm             = get_coursemodule_from_id('room', $id, 0, false, MUST_EXIST);
+$course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$moduleinstance = $DB->get_record('room', array('id' => $cm->instance), '*', MUST_EXIST);
 
 require_login($course, false, $cm);
 
@@ -100,6 +89,11 @@ if ($mform->is_cancelled()) {
             $slot->save_as_new();
         } elseif (!empty($data->deleteslot)) {
             redirect($slot->get_deleteurl($modulecontext));
+        } elseif (!empty($data->slotduplication)) {
+            redirect(new \moodle_url(
+                '/mod/room/slotduplication.php', 
+                ['id' => $id, 'eventid' => $eventid]
+            ));
         } else {
             $slot->save();
         }

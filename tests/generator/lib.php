@@ -41,7 +41,7 @@ class mod_room_generator extends testing_module_generator {
         $record = (object)(array)$record;
 
         if (!isset($record->type)) {
-            $record->type = ROOM_PLAN_TYPE_STANDARD;
+            $record->type = 'standard';
         }
 
         switch ($record->type) {

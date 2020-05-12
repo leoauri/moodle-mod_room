@@ -35,4 +35,13 @@ class date {
     public static function one_day_later($date) {
         return (new DateTimeImmutable())->setTimestamp($date)->modify('+1 day')->getTimestamp();
     }
+
+    public static function modified_timestamp(int $timestamp, string $modifier) {
+        // convert to DateTime object
+        $timestamp = new \DateTime('@' . $timestamp);
+        // apply the modifier
+        $timestamp->modify($modifier);
+        // convert back to timestamp
+        return $timestamp->getTimestamp();
+    }
 }

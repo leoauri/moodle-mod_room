@@ -114,6 +114,11 @@ class slot_edit extends \moodleform {
                 'deleteslot', 
                 get_string('deleteslot', 'mod_room')
             );
+            $submitarray[] = &$mform->createElement(
+                'submit',
+                'slotduplication',
+                get_string('slotduplication', 'mod_room')
+            );
             $submitarray[] = &$mform->createElement('cancel');
             $mform->addGroup($submitarray, 'buttonar', '', array(' '), false);
             $mform->closeHeaderBefore('buttonar');

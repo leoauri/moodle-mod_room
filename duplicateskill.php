@@ -34,7 +34,7 @@ if (!has_capability('moodle/site:config', context_system::instance())) {
     print_error('accessdenied', 'admin');
 }
 
-$allslots = new \mod_room\entity\slot_collection([]);
+$allslots = \mod_room\entity\slot_collection::retrieve([]);
 $keepslots = [];
 $killslots = [];
 

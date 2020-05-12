@@ -160,7 +160,17 @@ class slot {
                 'id' => $modulecontext->instanceid
             ]
         );
-}
+    }
+
+    public function get_editurl($modulecontext) {
+        return new \moodle_url(
+            '/mod/room/slotedit.php',
+            [
+                'eventid' => $this->id,
+                'id' => $modulecontext->instanceid
+            ]
+        );
+    }
 
     /**
      * Prepare properties for display by a template
@@ -212,13 +222,7 @@ class slot {
         $this->canedit = has_capability('mod/room:editslots', $modulecontext);
         if ($this->canedit) {
             $this->deleteurl = $this->get_deleteurl($modulecontext);
-            $this->editurl = new \moodle_url(
-                '/mod/room/slotedit.php',
-                [
-                    'eventid' => $this->id,
-                    'id' => $modulecontext->instanceid
-                ]
-            );
+            $this->editurl = $this->get_editurl($modulecontext);
         }
 
         // prepare display for bookings if we have a bookings collection object
@@ -276,7 +280,11 @@ class slot {
             $this->slotid = (int)$slotproperties->id;
             $this->id = (int)$slotproperties->eventid;
 
-            $this->context = (int)$slotproperties->contextid;
+            // contextid might be null, in which case we don't want to cast it to 0,
+            // or it might be an int stored as a string!
+            if ($slotproperties->contextid) {
+                $this->context = (int)$slotproperties->contextid;
+            }
             
             $this->spots = $slotproperties->spots;
             $this->bookings = new booking_collection($this->slotid);
@@ -433,12 +441,19 @@ class slot {
         }
     }
 
-    public function save_as_new() {
+    private function reset_unique_properties() {
         $this->event = null;
         $this->id = null;
         $this->slotid = null;
         $this->bookings = null;
+    }
 
+    public function __clone() {
+        $this->reset_unique_properties();
+    }
+
+    public function save_as_new() {
+        $this->reset_unique_properties();
         $this->save();
     }
 
@@ -451,6 +466,10 @@ class slot {
 
     public function midnight() {
         return usergetmidnight($this->timestart);
+    }
+
+    public function modify_starttime($timemodifier) {
+        $this->timestart = \mod_room\helper\date::modified_timestamp($this->timestart, $timemodifier);
     }
 
     public function context_or_course_context() {
