@@ -15,17 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Room module date helper class.
  *
  * @package     mod_room
  * @copyright   2019 Leo Auri <code@leoauri.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_room\helper;
+
+use DateTimeImmutable;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_room';
-$plugin->release = '3.3.3-beta';
-$plugin->version  = 2020051300;
-$plugin->requires = 2019111800;
-$plugin->maturity = MATURITY_ALPHA;
+class date {
+    /**
+     * Given a timestamp, return a timestamp one day later
+     */
+    public static function one_day_later($date) {
+        return (new DateTimeImmutable())->setTimestamp($date)->modify('+1 day')->getTimestamp();
+    }
+}

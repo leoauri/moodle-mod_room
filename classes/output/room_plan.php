@@ -46,23 +46,27 @@ class room_plan extends plan_base {
             return;
         }
 
-        $options = ['start' => $this->date];
+        $options = [];
 
-        // limit to the day unless upcoming plan
-        if ($this->moduleinstance->type != ROOM_PLAN_TYPE_UPCOMING) {
-            $options['end'] = $this->date + 24 * 60 * 60;
+        switch ($this->moduleinstance->type) {
+            case ROOM_PLAN_TYPE_STANDARD:
+                $options['start'] = $this->date;
+                $options['end'] = \mod_room\helper\date::one_day_later($this->date);
+            break;
+
+            case ROOM_PLAN_TYPE_UPCOMING:
+                $options['start'] = usergetmidnight(time());
+            break;
+
+            default:
+                throw new \Exception("Undefined room module instance type");
         }
 
-        // Show events from context tree for standard and upcoming plans
-        if (
-                $this->moduleinstance->type == ROOM_PLAN_TYPE_STANDARD || 
-                $this->moduleinstance->type == ROOM_PLAN_TYPE_UPCOMING
-            ) {
-            $options['contextsandcourse'] = [
-                'contexts' => array_slice(explode('/', $this->modulecontext->path), 1),
-                'courseid' => $this->moduleinstance->course
-            ];
-        }
+        // Show events from context tree
+        $options['contextsandcourse'] = [
+            'contexts' => array_slice(explode('/', $this->modulecontext->path), 1),
+            'courseid' => $this->moduleinstance->course
+        ];
 
         $this->events = new \mod_room\entity\slot_collection($options);
         $this->events->prepare_display($this->modulecontext);

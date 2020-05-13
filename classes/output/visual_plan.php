@@ -31,8 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 class visual_plan extends plan_base {
     private function retrieve_events() {
         $options = ['start' => $this->date];
-        $options['end'] = 
-            (new DateTimeImmutable())->setTimestamp($this->date)->modify('+1 day')->getTimestamp();
+        $options['end'] = \mod_room\helper\date::one_day_later($this->date);
 
         $this->events = new \mod_room\entity\slot_collection($options);
         $this->events->prepare_display($this->modulecontext);
