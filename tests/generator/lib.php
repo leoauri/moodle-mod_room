@@ -40,6 +40,10 @@ class mod_room_generator extends testing_module_generator {
         require_once($CFG->dirroot.'/mod/room/lib.php');
         $record = (object)(array)$record;
 
+        if (!isset($record->type)) {
+            $record->type = ROOM_PLAN_TYPE_STANDARD;
+        }
+
         switch ($record->type) {
             case 'upcoming':
                 $record->type = ROOM_PLAN_TYPE_UPCOMING;
