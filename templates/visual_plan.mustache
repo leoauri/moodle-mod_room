@@ -23,13 +23,13 @@
 
 <div id="mod-room-visual-plan">
 <table id="mod-room-visual-plan-grid">
-{{! Column-wise styling }}
-<colgroup>
-<col class="mod-room-grid-column mod-room-grid-column-time">
-{{#slots_by_location}} <col class="mod-room-grid-column mod-room-grid-column-location"> {{/slots_by_location}}
-</colgroup>
 
-<tr class="mod-room-location-header-row"><th></th>{{#slots_by_location}}<th class="mod-room-location-header">{{location}}</th>{{/slots_by_location}}</tr>
+<tr class="mod-room-location-header-row">
+<th class="mod-room-grid-column mod-room-grid-column-time"></th>
+{{#slots_by_location}}
+<th class="mod-room-location-header mod-room-grid-column mod-room-grid-column-location">{{location}}</th>
+{{/slots_by_location}}
+</tr>
 
 {{! Row for each hour of the day }}
 {{#hours_of_day}}
