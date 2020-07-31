@@ -56,6 +56,9 @@ define([
     };
 
     const reloadRoomPlanIfDateChanged = function() {
+        // remove the dirty form checker, there is no submit of the form to make it clean
+        window.onbeforeunload = null;
+        
         if (datesEqual(displayingDate, selectedDate())) {
             return;
         }
