@@ -59,7 +59,7 @@ class room_plan extends plan_base {
             break;
 
             default:
-                throw new \Exception("Undefined room module instance type");
+                throw new \Exception("Undefined room module instance type: {$this->moduleinstance->type}");
         }
 
         // Show events from context tree

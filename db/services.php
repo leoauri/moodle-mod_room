@@ -32,5 +32,12 @@ $functions = [
         'description' => 'Fetch a preview of slots that a given duplication operation should generate.',
         'type' => 'read',
         'ajax' => true,
+    ],
+    'mod_room_room_plan_rendered' => [
+        'classname' => 'mod_room\\external\\mod_room_room_plan_rendered',
+        'methodname' => 'mod_room_room_plan_rendered',
+        'description' => 'Return a rendered view of a room plan for a given date.',
+        'type' => 'read',
+        'ajax' => true,
     ]
 ];

@@ -66,7 +66,11 @@ class behat_mod_room extends behat_base {
                 throw new Exception('Slots must be created in a room');
             }
 
-            $moduleinstance = $DB->get_record('room', ['name' => $slotdata['roomplan']], '*', MUST_EXIST);
+            try {
+                $moduleinstance = $DB->get_record('room', ['name' => $slotdata['roomplan']], '*', MUST_EXIST);
+            } catch (dml_missing_record_exception $e) {
+                throw new Exception("Room plan module with name \"{$slotdata['roomplan']}\" not found");
+            }
 
             $starttime = new DateTime($slotdata['starttime']);
             $starttime = $starttime->getTimestamp();

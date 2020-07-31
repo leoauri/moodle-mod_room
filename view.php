@@ -25,7 +25,6 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 
-use mod_room\output\room_plan;
 use mod_room\form\date_selector;
 
 // Course_module ID
@@ -76,19 +75,36 @@ if ($moduleinstance->type == ROOM_PLAN_TYPE_UPCOMING) {
     echo $OUTPUT->heading(get_string('upcomingslots', 'mod_room') . ':', 3);
 }
 
-if ($moduleinstance->type == ROOM_PLAN_TYPE_MASTER) {
-    $roomplan = new mod_room\output\visual_plan($modulecontext, $moduleinstance, $date);
-} else {
-    $roomplan = new room_plan($modulecontext, $moduleinstance, $date);
-}
-
-// Remove date selector from upcoming slots
+// Show date selector for appropriate plan types
 if ($moduleinstance->type != ROOM_PLAN_TYPE_UPCOMING) {
     $dateselector->display();
+
+    // Javascript for reloading plan on date change
+    $calendartype = \core_calendar\type_factory::get_calendar_instance();
+    $datecomponents = $calendartype->timestamp_to_date_array($date);
+
+    $PAGE->requires->js_call_amd(
+        'mod_room/date_reload', 
+        'init', 
+        [
+            'initialdate' => [
+                'day' => $datecomponents['mday'], 
+                'month' => $datecomponents['mon'], 
+                'year' => $datecomponents['year']
+            ], 
+            'cmid' => $id
+        ]
+    );
+
 }
 
+$roomplan = mod_room\output\renderer::get_room_plan_type(
+    $modulecontext, 
+    $moduleinstance, 
+    $date
+);
 $renderer = $PAGE->get_renderer('mod_room');
-echo $renderer->render($roomplan);
+echo html_writer::tag('div', $renderer->render($roomplan), ['id' => 'mod-room-room-plan']);
 
 echo $roomplan->edit_slot_button();
 

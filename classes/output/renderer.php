@@ -40,4 +40,17 @@ class renderer extends plugin_renderer_base {
     protected function render_visual_plan(visual_plan $visual_plan) {
         return $this->render_from_template('mod_room/visual_plan', $visual_plan->export_for_template($this));
     }
+
+    /**
+     * get room plan of the appropriate type
+     */
+    public static function get_room_plan_type($modulecontext, $moduleinstance, $date) {
+        if ($moduleinstance->type == ROOM_PLAN_TYPE_MASTER) {
+            $roomplan = new visual_plan($modulecontext, $moduleinstance, $date);
+        } else {
+            $roomplan = new room_plan($modulecontext, $moduleinstance, $date);
+        }
+        
+        return $roomplan;
+    }
 }
