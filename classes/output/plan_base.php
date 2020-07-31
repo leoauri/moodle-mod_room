@@ -69,8 +69,14 @@ abstract class plan_base implements \renderable, \templatable {
                 '/mod/room/slotedit.php', 
                 array('id' => $this->modulecontext->instanceid, 'date' => $this->date));
             $label = get_string('addslot', 'mod_room');
-            return html_writer::div(html_writer::link(
-                $url, $label, array('class' => 'btn btn-secondary')), 'roomplan-slot-add m-t-1');
+            return html_writer::div(
+                html_writer::link(
+                    $url, 
+                    $label, 
+                    ['class' => 'btn btn-secondary', 'id' => 'mod-room-add-slot-button']
+                ), 
+                'roomplan-slot-add m-t-1'
+            );
         }
     }
 

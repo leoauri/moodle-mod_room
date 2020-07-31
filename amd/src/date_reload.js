@@ -40,6 +40,8 @@ define([
 
     const roomPlanContainer = document.getElementById('mod-room-room-plan');
 
+    const addSlotButton = document.getElementById('mod-room-add-slot-button');
+
     let displayingDate;
     let cmId;
 
@@ -86,6 +88,11 @@ define([
                     
                     // Push updated URL
                     history.pushState(null, null, '?' + response.url);
+
+                    // Update add slot button href
+                    if (addSlotButton) {
+                        addSlotButton.href = addSlotButton.href.split('?')[0] + '?' + response.url;
+                    }
                 }
             })
             .fail(Notification.exception);
