@@ -53,8 +53,21 @@ class mod_room_room_plan_rendered extends \external_api {
 
     public static function mod_room_room_plan_rendered($date, $cmid) {
         // Validate parameters!
+        $params = self::validate_parameters(
+            self::mod_room_room_plan_rendered_parameters(), 
+            ['date' => $date, 'cmid' => $cmid]
+        );
+        list($date, $cmid) = [$params['date'], $params['cmid']];
+
+        // Need to include mod room lib manually
+        global $CFG;
+        require_once("$CFG->dirroot/mod/room/lib.php");
 
         // Validate context!
+        $cm = get_coursemodule_from_id('room', $cmid, 0, false, MUST_EXIST);
+        $modulecontext = \context_module::instance($cm->id);
+        self::validate_context($modulecontext);
+        require_capability('mod/room:view', $modulecontext);
 
         // Convert received date components to timestamp
         $calendartype = \core_calendar\type_factory::get_calendar_instance();
@@ -64,17 +77,9 @@ class mod_room_room_plan_rendered extends \external_api {
             $gregoriandate['month'],
             $gregoriandate['day'],
         );
-
-        $cm = get_coursemodule_from_id('room', $cmid, 0, false, MUST_EXIST);
         
         global $DB;
         $moduleinstance = $DB->get_record('room', array('id' => $cm->instance), '*', MUST_EXIST);
-
-        // Need to include mod room lib manually
-        global $CFG;
-        require_once("$CFG->dirroot/mod/room/lib.php");
-        
-        $modulecontext = \context_module::instance($cm->id);
         
         global $PAGE;
         $PAGE->set_context($modulecontext);
