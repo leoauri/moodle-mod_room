@@ -94,4 +94,35 @@ $grid-column-width: 150px;
 
 .mod-room-slot-info {
     margin-bottom: 1rem;
+
+    &.hidden {
+        display: none;
+    }
+}
+
+#mod-room-slot-filters {
+    border: 1px dashed $color-turquoise-bright;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+
+    span {
+        padding: 4px 12px;
+        background-color: $color-aquamarine;
+        margin: 2px;
+        white-space: nowrap;
+        display: inline-block;
+        cursor: default;
+
+        &:hover {
+            background-color: $color-gray-pastel;
+        }
+
+        &.selected {
+            background-color: $color-onyx;
+            color: $color-turquoise-bright;
+            &:hover {
+                background-color: $color-onyx;
+            }
+        }
+    }
 }

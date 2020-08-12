@@ -170,6 +170,21 @@ function xmldb_room_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2019122300, 'room');
     }
 
+    if ($oldversion < 2020081002) {
+
+        // Define field filters to be added to room.
+        $table = new xmldb_table('room');
+        $field = new xmldb_field('filters', XMLDB_TYPE_TEXT, null, null, null, null, null, 'type');
+
+        // Conditionally launch add field filters.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Room savepoint reached.
+        upgrade_mod_savepoint(true, 2020081002, 'room');
+    }
+
 
     return true;
 }

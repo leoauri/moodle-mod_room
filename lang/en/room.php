@@ -118,3 +118,8 @@ $string['master'] = 'Master';
 $string['masterroomplan'] = 'Master room plan';
 $string['upcoming'] = 'Upcoming';
 $string['upcomingslots'] = 'Upcoming slots';
+$string['filters'] = 'Filters';
+$string['filters_help'] = "Comma-delineated list of tokens that will be available for filtering displayed slots.\n
+For example:\n
+mixing, theory, advanced, basics, Julie, Peter";
+$string['filterslots'] = 'Filter slots:';

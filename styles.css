@@ -90,3 +90,35 @@
 .mod-room-slot-info {
   margin-bottom: 1rem;
 }
+
+.mod-room-slot-info.hidden {
+  display: none;
+}
+
+#mod-room-slot-filters {
+  border: 1px dashed #02e4f0;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+#mod-room-slot-filters span {
+  padding: 4px 12px;
+  background-color: #7ef8e1;
+  margin: 2px;
+  white-space: nowrap;
+  display: inline-block;
+  cursor: default;
+}
+
+#mod-room-slot-filters span:hover {
+  background-color: #cecece;
+}
+
+#mod-room-slot-filters span.selected {
+  background-color: #353736;
+  color: #02e4f0;
+}
+
+#mod-room-slot-filters span.selected:hover {
+  background-color: #353736;
+}

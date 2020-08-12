@@ -66,6 +66,11 @@ class mod_room_mod_form extends moodleform_mod {
             ROOM_PLAN_TYPE_UPCOMING => get_string('upcoming', 'mod_room')
         ]);
 
+        // Slot display filters
+        $mform->addElement('textarea', 'filters', get_string('filters', 'mod_room'), ['cols' => 64, 'rows' => 2]);
+        $mform->setType('filters', PARAM_TAGLIST);
+        $mform->addHelpButton('filters', 'filters', 'mod_room');
+
         // Adding the standard "intro" and "introformat" fields.
         if ($CFG->branch >= 29) {
             $this->standard_intro_elements();

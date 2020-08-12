@@ -106,6 +106,10 @@ $roomplan = mod_room\output\renderer::get_room_plan_type(
 $renderer = $PAGE->get_renderer('mod_room');
 echo html_writer::tag('div', $renderer->render($roomplan), ['id' => 'mod-room-room-plan']);
 
+if ($moduleinstance->type == ROOM_PLAN_TYPE_UPCOMING && $moduleinstance->filters) {
+    $PAGE->requires->js_call_amd('mod_room/slot_display_filters', 'init', ['filterlist' => $moduleinstance->filters]);
+}
+
 echo $roomplan->edit_slot_button();
 
 echo $OUTPUT->footer();
