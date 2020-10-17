@@ -123,3 +123,4 @@ $string['filters_help'] = "Comma-delineated list of tokens that will be availabl
 For example:\n
 mixing, theory, advanced, basics, Julie, Peter";
 $string['filterslots'] = 'Filter slots:';
+$string['exportattendancerecords'] = 'Export attendance records';

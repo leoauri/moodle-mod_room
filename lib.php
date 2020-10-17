@@ -144,6 +144,11 @@ function room_extend_settings_navigation(settings_navigation $settingsnav, navig
         $label = get_string('roomadministration', 'mod_room');
         $roomnode->add($label, $url);
     }
+    if (has_capability('mod/room:exportattendance', $context)) {
+        $url = new moodle_url('/mod/room/exportattendance.php');
+        $label = get_string('exportattendancerecords', 'mod_room');
+        $roomnode->add($label, $url);
+    }
 }
 
 /**

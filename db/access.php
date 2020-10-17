@@ -78,4 +78,13 @@ $capabilities = [
         ],
         'clonepermissionsfrom' => 'moodle/site:configview',
     ],
+
+    'mod/room:exportattendance' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW
+        ],
+        'clonepermissionsfrom' => 'moodle/site:configview',
+    ],
 ];
